@@ -1,0 +1,101 @@
+@import url('https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap');
+
+body {
+  background-color: #f0f2f5;
+  color: #333;
+  font-family: 'Roboto', sans-serif; /* Use a modern font */
+}
+
+.navbar {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 1rem 2rem;
+  background-color: #fff;
+  border-bottom: 1px solid #ddd; /* Light border */
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1); /* Subtle shadow */
+}
+
+.logo {
+  font-size: 1.5rem;
+  color: #333;
+  font-weight: 700;
+  text-decoration: none; /* Remove underline */
+}
+
+.nav-links {
+  list-style: none;
+  display: flex;
+  gap: 1.5rem;
+}
+
+.nav-links li {
+  padding: 0.5rem;
+  transition: transform 0.2s, color 0.2s; /* Smooth transitions */
+}
+
+.nav-links li:hover {
+  transform: scale(1.05); /* Slight hover effect */
+  color: #0070f3; /* Change color on hover */
+}
+
+.nav-links li.active {
+  border-bottom: 2px solid #0070f3; /* Modern blue color */
+}
+
+.nav-links a {
+  color: #333;
+  text-decoration: none;
+  font-size: 1rem;
+}
+
+.toggle-button {
+  display: none;
+  background: none;
+  border: none;
+  color: #333;
+  font-size: 1.5rem;
+  cursor: pointer;
+}
+
+.connect-button {
+    background-color: #0070f3;
+    color: #fff;
+    border: none;
+    padding: 0.5rem 1rem;
+    font-size: 1rem;
+    cursor: pointer;
+    transition: background-color 0.3s;
+    border-radius: 4px; /* Rounded corners */
+  }
+  
+  .connect-button:hover {
+    background-color: #005bb5; /* Darker blue on hover */
+  }
+  
+  .connect-button.connected {
+    background-color: #28a745; /* Green background when connected */
+    color: #fff;
+  }
+
+@media (max-width: 768px) {
+  .nav-links {
+    display: none;
+  }
+
+  .navbar.active .nav-links {
+    display: flex;
+    flex-direction: column;
+    gap: 0;
+  }
+
+  .toggle-button {
+    display: block;
+  }
+}
+
+@media (min-width: 769px) {
+  .navbar {
+    flex-direction: row;
+  }
+}
