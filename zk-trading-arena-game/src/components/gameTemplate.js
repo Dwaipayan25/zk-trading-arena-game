@@ -2,29 +2,24 @@
 
 import { useState } from "react";
 
-export default function Level1() {
+export default function GameTemplate({ gameConfig }) {
+  const { initialMoney, initialPrices, news, years } = gameConfig;
+
   const [year, setYear] = useState(1);
-  const [money, setMoney] = useState(1000); // Initial amount
-  const [positions, setPositions] = useState({ computers: 0, phones: 0, gold: 0 }); // Items
-  const [showNews, setShowNews] = useState(false); // Toggle news popup
-  const [gameOver, setGameOver] = useState(false); // Track if the game is over
-  const [finalStats, setFinalStats] = useState({}); // Store final stats
+  const [money, setMoney] = useState(initialMoney);
+  const [positions, setPositions] = useState({});
+  const [showNews, setShowNews] = useState(false);
+  const [gameOver, setGameOver] = useState(false);
+  const [finalStats, setFinalStats] = useState({});
 
-  const initialPrices = {
-    1: { computers: 100, phones: 50, gold: 200 },
-    2: { computers: 120, phones: 60, gold: 250 }, // Year 2 prices
-  };
-
-  const updatedPrices = {
-    computers: 110,
-    phones: 70,
-    gold: 300,
-  };
-
-  const news = {
-    1: "Tech boom drives up computer prices! \nExperts recommend investing in tech assets.",
-    2: "Gold demand surges globally! \nSafe-haven assets like gold are expected to soar.",
-  };
+  // Initialize positions dynamically based on items in prices
+  if (!Object.keys(positions).length) {
+    const initialPositions = {};
+    Object.keys(initialPrices[1]).forEach((item) => {
+      initialPositions[item] = 0;
+    });
+    setPositions(initialPositions);
+  }
 
   const handleBuy = (item) => {
     if (money >= initialPrices[year][item]) {
@@ -41,54 +36,43 @@ export default function Level1() {
   };
 
   const moveToNextYear = () => {
-    setYear(2); // Move to Year 2
+    if (year < years) {
+      setYear(year + 1);
+    }
   };
 
   const calculateProfit = () => {
-    const initialWorth = 1000; // Initial money
-    const finalWorth =
-      money +
-      positions.computers * updatedPrices.computers +
-      positions.phones * updatedPrices.phones +
-      positions.gold * updatedPrices.gold;
+    const finalWorth = money + Object.keys(positions).reduce((acc, item) => {
+      return acc + positions[item] * initialPrices[years][item];
+    }, 0);
 
-    const profitPercentage = ((finalWorth - initialWorth) / initialWorth) * 100;
+    const profitPercentage = ((finalWorth - initialMoney) / initialMoney) * 100;
     let stars = 0;
     if (profitPercentage >= 60) stars = 3;
     else if (profitPercentage >= 40) stars = 2;
     else if (profitPercentage >= 20) stars = 1;
 
-    setFinalStats({
-      finalWorth,
-      profitPercentage,
-      stars,
-    });
-    setGameOver(true); // End the game
+    setFinalStats({ finalWorth, profitPercentage, stars });
+    setGameOver(true);
   };
 
   const calculatePortfolioValue = () => {
-    return (
-      money +
-      positions.computers * initialPrices[year].computers +
-      positions.phones * initialPrices[year].phones +
-      positions.gold * initialPrices[year].gold
-    );
+    return money + Object.keys(positions).reduce((acc, item) => {
+      return acc + positions[item] * initialPrices[year][item];
+    }, 0);
   };
 
   return (
     <div className="container mx-auto p-4">
       {!gameOver ? (
         <>
-          <h1 className="text-3xl font-bold mb-4">Level 1: Rookie Trader</h1>
-          <div className="flex justify-between items-center mb-6">
-            <p className="text-xl">Current Year: {year}</p>
-            <button
-              onClick={() => setShowNews(true)}
-              className="bg-blue-500 text-white px-4 py-2 rounded"
-            >
-              View Market News
-            </button>
-          </div>
+          <h1 className="text-3xl font-bold mb-4">{`Year ${year}`}</h1>
+          <button
+            onClick={() => setShowNews(true)}
+            className="bg-blue-500 text-white px-4 py-2 rounded mb-4"
+          >
+            View News
+          </button>
 
           {/* News Popup */}
           {showNews && (
@@ -131,15 +115,15 @@ export default function Level1() {
                     <button
                       onClick={() => handleBuy(item)}
                       className="bg-green-500 text-white px-2 py-1 rounded mr-2"
-                      disabled={money < initialPrices[year][item]} // Cannot buy if insufficient funds
+                      disabled={money < initialPrices[year][item]}
                     >
                       Buy
                     </button>
-                    {year === 2 && (
+                    {year > 1 && (
                       <button
                         onClick={() => handleSell(item)}
                         className="bg-yellow-500 text-white px-2 py-1 rounded"
-                        disabled={positions[item] <= 0} // Cannot sell if no position
+                        disabled={positions[item] <= 0}
                       >
                         Sell
                       </button>
@@ -152,7 +136,7 @@ export default function Level1() {
 
           {/* Remaining Money and Actions */}
           <p className="mb-4">Remaining Money: ${money.toFixed(2)}</p>
-          {year === 1 ? (
+          {year < years ? (
             <button
               onClick={moveToNextYear}
               className="bg-blue-600 text-white px-4 py-2 rounded"
@@ -178,17 +162,7 @@ export default function Level1() {
           <p className="text-lg mb-4">
             Profit Percentage: {finalStats.profitPercentage.toFixed(2)}%
           </p>
-          <p className="text-lg mb-4">
-            Stars Earned: {finalStats.stars} Star(s)
-          </p>
-          <h2 className="text-xl font-bold">Final Prices:</h2>
-          <ul className="list-disc list-inside">
-            {Object.keys(updatedPrices).map((item) => (
-              <li key={item} className="capitalize">
-                {item}: ${updatedPrices[item]}
-              </li>
-            ))}
-          </ul>
+          <p className="text-lg mb-4">Stars Earned: {finalStats.stars} Star(s)</p>
         </div>
       )}
     </div>
