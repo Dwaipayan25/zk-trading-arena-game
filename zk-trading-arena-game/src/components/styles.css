@@ -78,6 +78,20 @@ body {
     color: #fff;
   }
 
+  .xp-box {
+    margin-right: 1rem; /* Space between XP box and "Level Up" */
+    display: inline-block;
+    background-color: #facc15; /* Bright yellow */
+    color: #000; /* Black text */
+    font-size: 1rem;
+    font-weight: bold;
+    border-radius: 8px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    padding: 0.5rem 1rem;
+    text-align: center;
+  }
+  
+
 @media (max-width: 768px) {
   .nav-links {
     display: none;
@@ -99,3 +113,4 @@ body {
     flex-direction: row;
   }
 }
+

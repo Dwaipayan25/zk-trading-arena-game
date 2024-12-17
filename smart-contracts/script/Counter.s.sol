@@ -17,3 +17,7 @@ contract CounterScript is Script {
         vm.stopBroadcast();
     }
 }
+
+/*
+forge script script/Counter.s.sol --broadcast --rpc-url https://rpc.open-campus-codex.gelato.digital/ --gas-limit 30000000 --with-gas-price 5gwei --skip-simulation
+*/

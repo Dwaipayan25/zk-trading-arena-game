@@ -1,36 +1,43 @@
-"use client";
+'use client';
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
+import { useWeb3 } from "../app/Web3Context";
 import "./styles.css";
 
 const Navbar = () => {
+  const { web3Handler, account, zkTradeContract } = useWeb3();
   const [isOpen, setIsOpen] = useState(false);
-  const [account, setAccount] = useState(null);
+  const [xp, setXp] = useState(0); // State for XP
   const pathname = usePathname();
 
   const toggleNavbar = () => {
     setIsOpen(!isOpen);
   };
 
-  const connectMetaMask = async () => {
-    if (window.ethereum) {
-      try {
-        const accounts = await window.ethereum.request({ method: 'eth_requestAccounts' });
-        setAccount(accounts[0]);
-        console.log('MetaMask connected');
-      } catch (error) {
-        console.error('User rejected the request');
-      }
-    } else {
-      console.error('MetaMask is not installed');
-    }
-  };
-
   const formatAccount = (account) => {
     return `${account.slice(0, 6)}...${account.slice(-4)}`;
   };
+
+  // Fetch XP for the connected account
+  const fetchXP = async () => {
+    try {
+      if (zkTradeContract && account) {
+        const xpValue = await zkTradeContract.getXP(account);
+        setXp(Number(xpValue)); // Convert BigNumber to Number
+      }
+    } catch (error) {
+      console.error("Error fetching XP:", error);
+    }
+  };
+
+  // Fetch XP when account or contract changes
+  useEffect(() => {
+    if (account) {
+      fetchXP();
+    }
+  }, [account, zkTradeContract]);
 
   return (
     <nav className={`navbar ${isOpen ? "active" : ""}`}>
@@ -41,6 +48,15 @@ const Navbar = () => {
         ☰
       </button>
       <ul className="nav-links">
+        {/* XP Box */}
+        {account && (
+          <li>
+            <div className="xp-box bg-yellow-300 text-black px-4 py-2 rounded-lg font-bold shadow-md">
+              Total XP: {xp}
+            </div>
+          </li>
+        )}
+
         <li className={pathname === "/level-up" ? "active" : ""}>
           <Link href="/level-up">Level Up</Link>
         </li>
@@ -56,7 +72,7 @@ const Navbar = () => {
         <li>
           <button
             className={`connect-button ${account ? "connected" : ""}`}
-            onClick={connectMetaMask}
+            onClick={web3Handler}
           >
             {account ? formatAccount(account) : "Connect Now"}
           </button>

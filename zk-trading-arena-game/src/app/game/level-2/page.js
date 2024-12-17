@@ -1,6 +1,7 @@
 'use client';
 
 import { useState } from "react";
+import ProofGenerator from '../../ProofGenerator'; 
 
 export default function Level2() {
   const [year, setYear] = useState(1);
@@ -89,7 +90,7 @@ export default function Level2() {
     <div className="container mx-auto p-4">
       {!gameOver ? (
         <>
-          <h1 className="text-3xl font-bold mb-4">Level 2: Advanced Trader</h1>
+          <h1 className="text-3xl font-bold mb-4">Level 2: Novice Trader</h1>
           <div className="flex justify-between items-center mb-6">
             <p className="text-xl">Current Year: {year}</p>
             <button
@@ -199,6 +200,12 @@ export default function Level2() {
               </li>
             ))}
           </ul>
+          <ProofGenerator
+            initialWorth={1500}
+            finalWorth={finalStats.finalWorth}
+            stars={finalStats.stars - 1}
+            gameNumber={2} // Assuming game_number is 2
+          />
         </div>
       )}
     </div>

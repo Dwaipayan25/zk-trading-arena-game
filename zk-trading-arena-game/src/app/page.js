@@ -1,6 +1,12 @@
+"use client";
+
 import Link from "next/link";
+import React from 'react';
+import ProfitVerifier from './ProfitVerifier';
 
 export default function Home() {
+
+
   return (
     <div className="container">
       <h1>Welcome to ZK-Trading-Arena-Game</h1>
@@ -39,6 +45,9 @@ export default function Home() {
           </Link>
         </div>
       </div>
+
+      {/* Profit Verifier Section */}
+      {/* <ProfitVerifier /> */}
     </div>
   );
 }
