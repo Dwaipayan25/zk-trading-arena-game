@@ -25,7 +25,7 @@ const generateProof = async () => {
     // Fetch existing game data from the contract
     const existingScore = await zkTradeContract.getGameDetails(
       account,
-      1
+      gameNumber
     );
 
     // Check if score is greater than stars

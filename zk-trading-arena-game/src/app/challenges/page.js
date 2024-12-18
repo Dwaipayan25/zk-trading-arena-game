@@ -6,8 +6,9 @@ import { ethers } from 'ethers';
 
 const levels = [
   { gameNumber: 1, title: "Level 1: Rookie Trader", description: "Test your basic trading skills and earn XP." },
-  { gameNumber: 2, title: "Level 2: Intermediate Trader", description: "Advance through harder trading challenges." },
-  { gameNumber: 3, title: "Level 3: Pro Trader", description: "Prove your mastery of trading strategies." },
+  { gameNumber: 2, title: "Level 2: Novice Trader", description: "Advance through harder trading challenges." },
+  { gameNumber: 3, title: "Level 3: Apprentice Trader", description: "Prove your mastery of trading strategies." },
+  { gameNumber: 4, title: "Level 4: Journeyman Trader", description: "Have you travelled enough ?" },
 ];
 
 const ClaimXP = () => {

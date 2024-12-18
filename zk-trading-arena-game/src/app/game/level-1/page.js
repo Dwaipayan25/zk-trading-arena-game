@@ -233,6 +233,9 @@ export default function Level1() {
               <p className="text-lg mb-4">
                 Final Portfolio Value: ${finalStats.finalWorth.toFixed(2)}
               </p>
+              <p className="text-lg mb-4">
+                Stars: {finalStats.stars}⭐️
+              </p>
               <ProofGenerator
                 initialWorth={1000}
                 finalWorth={finalStats.finalWorth}
