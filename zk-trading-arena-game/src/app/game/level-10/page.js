@@ -1,20 +1,26 @@
 'use client';
 
 import { useState } from "react";
+import { useWeb3 } from "../../Web3Context";
+import ProofGenerator from "../../ProofGenerator";
+import { ethers } from "ethers";
 
 export default function Level10() {
+  const { account, zkTradeContract } = useWeb3();
+  const [hasEntered, setHasEntered] = useState(false);
+  const [enteringGame, setEnteringGame] = useState(false);
   const [year, setYear] = useState(1);
-  const [money, setMoney] = useState(5000); // Initial amount
-  const [positions, setPositions] = useState({ computers: 0, phones: 0, gold: 0, oil: 0, stocks: 0 }); // Items
-  const [gameOver, setGameOver] = useState(false); // Track if the game is over
-  const [finalStats, setFinalStats] = useState({}); // Store final stats
-  const [currentEvent, setCurrentEvent] = useState(""); // Track the current random event
+  const [money, setMoney] = useState(5000);
+  const [positions, setPositions] = useState({ computers: 0, phones: 0, gold: 0, oil: 0, stocks: 0 });
+  const [gameOver, setGameOver] = useState(false);
+  const [finalStats, setFinalStats] = useState({});
+  const [currentEvent, setCurrentEvent] = useState("");
 
   const initialPrices = {
     1: { computers: 300, phones: 200, gold: 500, oil: 400, stocks: 600 },
-    2: { computers: 0, phones: 0, gold: 0, oil: 0, stocks: 0 }, // Dynamically updated
-    3: { computers: 0, phones: 0, gold: 0, oil: 0, stocks: 0 }, // Dynamically updated
-    4: { computers: 0, phones: 0, gold: 0, oil: 0, stocks: 0 }, // Dynamically updated
+    2: { computers: 0, phones: 0, gold: 0, oil: 0, stocks: 0 },
+    3: { computers: 0, phones: 0, gold: 0, oil: 0, stocks: 0 },
+    4: { computers: 0, phones: 0, gold: 0, oil: 0, stocks: 0 },
   };
 
   const finalPrices = {
@@ -32,12 +38,43 @@ export default function Level10() {
     { event: "Gold Surge: Gold prices increase by 25%", target: ["gold"], multiplier: 1.25 },
   ];
 
+  const entryFee = ethers.utils.parseEther("0.001");
   const [prices, setPrices] = useState(initialPrices);
+
+  const handleEnterGame = async () => {
+    if (!zkTradeContract || !account) {
+      alert("Web3 not initialized. Please connect your wallet!");
+      return;
+    }
+
+    try {
+      setEnteringGame(true);
+
+      const isEnterRequired = await zkTradeContract.checkEnterGameRequiredOrNot(10);
+      if (!isEnterRequired) {
+        alert("You have already entered this game.");
+        setHasEntered(true);
+        setEnteringGame(false);
+        return;
+      }
+
+      const tx = await zkTradeContract.enterGame(10, { value: entryFee });
+      await tx.wait();
+
+      setHasEntered(true);
+      alert("You have successfully entered the game!");
+    } catch (error) {
+      console.error("Error entering the game:", error);
+      alert("Failed to enter the game. Check your wallet and balance.");
+    } finally {
+      setEnteringGame(false);
+    }
+  };
 
   const applyInflation = () => {
     const updatedPrices = { ...prices[year] };
     for (const item in updatedPrices) {
-      updatedPrices[item] = Math.round(updatedPrices[item] * 1.05); // Increase by 5%
+      updatedPrices[item] = Math.round(updatedPrices[item] * 1.05);
     }
     setPrices((prev) => ({ ...prev, [year]: updatedPrices }));
   };
@@ -63,7 +100,7 @@ export default function Level10() {
 
   const calculateAnnualTax = () => {
     const portfolioValue = calculatePortfolioValue();
-    const tax = Math.round(portfolioValue * 0.1); // 10% tax
+    const tax = Math.round(portfolioValue * 0.1);
     setMoney((prev) => prev - tax);
   };
 
@@ -87,7 +124,6 @@ export default function Level10() {
 
   const handleSell = (item) => {
     if (positions[item] > 0) {
-      // Dependency: Selling gold decreases oil prices but increases stock prices
       if (item === "gold") {
         setPrices((prev) => ({
           ...prev,
@@ -106,15 +142,15 @@ export default function Level10() {
 
   const moveToNextYear = () => {
     if (year < 4) {
-      calculateAnnualTax(); // Apply annual tax
-      applyInflation(); // Apply inflation to prices
+      calculateAnnualTax();
+      applyInflation();
       setYear((prev) => prev + 1);
-      applyRandomEvent(); // Apply a random event
+      applyRandomEvent();
     }
   };
 
   const calculateProfit = () => {
-    const initialWorth = 5000; // Initial money
+    const initialWorth = 5000;
     const finalWorth =
       money +
       positions.computers * finalPrices.computers +
@@ -134,92 +170,111 @@ export default function Level10() {
       profitPercentage,
       stars,
     });
-    setGameOver(true); // End the game
+    setGameOver(true);
   };
 
   return (
     <div className="container mx-auto p-4">
-      {!gameOver ? (
-        <>
-          <h1 className="text-3xl font-bold mb-4">Level 10: Inflation and Taxes</h1>
-          <div className="flex justify-between items-center mb-6">
-            <p className="text-xl">Current Year: {year}</p>
-            {currentEvent && <p className="text-lg font-semibold">Event: {currentEvent}</p>}
-          </div>
-
-          {/* Portfolio Value */}
-          <p className="mb-4 text-lg font-semibold">
-            Current Portfolio Value: ${calculatePortfolioValue().toFixed(2)}
-          </p>
-
-          {/* Prices Table */}
-          <table className="w-full text-left mb-6">
-            <thead>
-              <tr>
-                <th className="border px-4 py-2">Item</th>
-                <th className="border px-4 py-2">Price</th>
-                <th className="border px-4 py-2">Position</th>
-                <th className="border px-4 py-2">Actions</th>
-              </tr>
-            </thead>
-            <tbody>
-              {Object.keys(prices[year]).map((item) => (
-                <tr key={item}>
-                  <td className="border px-4 py-2 capitalize">{item}</td>
-                  <td className="border px-4 py-2">${prices[year][item]}</td>
-                  <td className="border px-4 py-2">{positions[item]}</td>
-                  <td className="border px-4 py-2">
-                    <button
-                      onClick={() => handleBuy(item)}
-                      className="bg-green-500 text-white px-2 py-1 rounded mr-2"
-                      disabled={money < prices[year][item]} // Cannot buy if insufficient funds
-                    >
-                      Buy
-                    </button>
-                    <button
-                      onClick={() => handleSell(item)}
-                      className="bg-yellow-500 text-white px-2 py-1 rounded"
-                      disabled={positions[item] <= 0} // Cannot sell if no position
-                    >
-                      Sell
-                    </button>
-                  </td>
-                </tr>
-              ))}
-            </tbody>
-          </table>
-
-          {/* Remaining Money and Actions */}
-          <p className="mb-4">Remaining Money: ${money.toFixed(2)}</p>
-          {year < 4 ? (
-            <button
-              onClick={moveToNextYear}
-              className="bg-blue-600 text-white px-4 py-2 rounded"
-            >
-              Move to Next Year
-            </button>
-          ) : (
-            <button
-              onClick={calculateProfit}
-              className="bg-yellow-500 text-white px-4 py-2 rounded"
-            >
-              Calculate Final Score
-            </button>
-          )}
-        </>
+      {!hasEntered ? (
+        <div className="text-center mt-20">
+          <h1 className="text-4xl font-bold mb-6">Welcome to Level 10: Inflation and Taxes</h1>
+          <button
+            onClick={handleEnterGame}
+            className={`bg-green-500 text-white px-6 py-3 rounded-lg text-lg hover:bg-green-600 transition ${
+              enteringGame && "opacity-50 cursor-not-allowed"
+            }`}
+            disabled={enteringGame}
+          >
+            {enteringGame ? "Entering Game..." : "Enter Game"}
+          </button>
+        </div>
       ) : (
-        /* Game Over Summary */
-        <div className="text-center">
-          <h1 className="text-3xl font-bold mb-4">Game Over</h1>
-          <p className="text-lg mb-4">
-            Final Portfolio Value: ${finalStats.finalWorth.toFixed(2)}
-          </p>
-          <p className="text-lg mb-4">
-            Profit Percentage: {finalStats.profitPercentage.toFixed(2)}%
-          </p>
-          <p className="text-lg mb-4">
-            Stars Earned: {finalStats.stars} Star(s)
-          </p>
+        <div>
+          {!gameOver ? (
+            <>
+              <h1 className="text-3xl font-bold mb-4">Level 10: Inflation and Taxes</h1>
+              <div className="flex justify-between items-center mb-6">
+                <p className="text-xl">Current Year: {year}</p>
+                {currentEvent && <p className="text-lg font-semibold">Event: {currentEvent}</p>}
+              </div>
+
+              <p className="mb-4 text-lg font-semibold">
+                Current Portfolio Value: ${calculatePortfolioValue().toFixed(2)}
+              </p>
+
+              <table className="w-full text-left mb-6">
+                <thead>
+                  <tr>
+                    <th className="border px-4 py-2">Item</th>
+                    <th className="border px-4 py-2">Price</th>
+                    <th className="border px-4 py-2">Position</th>
+                    <th className="border px-4 py-2">Actions</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {Object.keys(prices[year]).map((item) => (
+                    <tr key={item}>
+                      <td className="border px-4 py-2 capitalize">{item}</td>
+                      <td className="border px-4 py-2">${prices[year][item]}</td>
+                      <td className="border px-4 py-2">{positions[item]}</td>
+                      <td className="border px-4 py-2">
+                        <button
+                          onClick={() => handleBuy(item)}
+                          className="bg-green-500 text-white px-2 py-1 rounded mr-2"
+                          disabled={money < prices[year][item]}
+                        >
+                          Buy
+                        </button>
+                        <button
+                          onClick={() => handleSell(item)}
+                          className="bg-yellow-500 text-white px-2 py-1 rounded"
+                          disabled={positions[item] <= 0}
+                        >
+                          Sell
+                        </button>
+                      </td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+
+              <p className="mb-4">Remaining Money: ${money.toFixed(2)}</p>
+              {year < 4 ? (
+                <button
+                  onClick={moveToNextYear}
+                  className="bg-blue-600 text-white px-4 py-2 rounded"
+                >
+                  Move to Next Year
+                </button>
+              ) : (
+                <button
+                  onClick={calculateProfit}
+                  className="bg-yellow-500 text-white px-4 py-2 rounded"
+                >
+                  Calculate Final Score
+                </button>
+              )}
+            </>
+          ) : (
+            <div className="text-center">
+              <h1 className="text-3xl font-bold mb-4">Game Over</h1>
+              <p className="text-lg mb-4">
+                Final Portfolio Value: ${finalStats.finalWorth.toFixed(2)}
+              </p>
+              <p className="text-lg mb-4">
+                Profit Percentage: {finalStats.profitPercentage.toFixed(2)}%
+              </p>
+              <p className="text-lg mb-4">
+                Stars Earned: {finalStats.stars} Star(s)
+              </p>
+              <ProofGenerator
+                initialWorth={5000}
+                finalWorth={finalStats.finalWorth}
+                stars={finalStats.stars - 1}
+                gameNumber={10}
+              />
+            </div>
+          )}
         </div>
       )}
     </div>
