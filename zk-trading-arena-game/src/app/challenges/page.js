@@ -8,8 +8,25 @@ const levels = [
   { gameNumber: 1, title: "Level 1: Rookie Trader", description: "Test your basic trading skills and earn XP." },
   { gameNumber: 2, title: "Level 2: Novice Trader", description: "Advance through harder trading challenges." },
   { gameNumber: 3, title: "Level 3: Apprentice Trader", description: "Prove your mastery of trading strategies." },
-  { gameNumber: 4, title: "Level 4: Journeyman Trader", description: "Have you travelled enough ?" },
+  { gameNumber: 4, title: "Level 4: Journeyman Trader", description: "Have you travelled enough?" },
+  { gameNumber: 5, title: "Level 5: Strategist", description: "Develop a winning trading strategy." },
+  { gameNumber: 6, title: "Level 6: Expert Trader", description: "Showcase your expertise in volatile markets." },
+  { gameNumber: 7, title: "Level 7: Master Trader", description: "Master the art of timing and execution." },
+  { gameNumber: 8, title: "Level 8: Grandmaster Trader", description: "Compete at the highest level of trading." },
+  { gameNumber: 9, title: "Level 9: Elite Trader", description: "Join the elite ranks of trading legends." },
+  { gameNumber: 10, title: "Level 10: Legendary Trader", description: "Achieve legendary status in trading." },
+  { gameNumber: 11, title: "Level 11: Mythical Trader", description: "Enter the mythical realm of trading greatness." },
+  { gameNumber: 12, title: "Level 12: Epic Trader", description: "Make epic trades and extraordinary gains." },
+  { gameNumber: 13, title: "Level 13: Heroic Trader", description: "Save the day with heroic trading decisions." },
+  { gameNumber: 14, title: "Level 14: Champion Trader", description: "Become the champion in the trading arena." },
+  { gameNumber: 15, title: "Level 15: Supreme Trader", description: "Reach supreme levels of trading excellence." },
+  { gameNumber: 16, title: "Level 16: Ultimate Trader", description: "Face ultimate challenges and triumph." },
+  { gameNumber: 17, title: "Level 17: Godlike Trader", description: "Attain godlike precision in trading." },
+  { gameNumber: 18, title: "Level 18: Immortal Trader", description: "Leave an immortal legacy in the trading world." },
+  { gameNumber: 19, title: "Level 19: Divine Trader", description: "Trade with divine intuition and skill." },
+  { gameNumber: 20, title: "Level 20: Omnipotent Trader", description: "Become the omnipotent force in trading." },
 ];
+
 
 const ClaimXP = () => {
   const { zkTradeContract, account } = useWeb3(); // Access smart contract
