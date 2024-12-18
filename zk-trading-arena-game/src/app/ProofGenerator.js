@@ -9,42 +9,70 @@ const ProofGenerator = ({ initialWorth, finalWorth, stars, gameNumber }) => {
   const [proofData, setProofData] = useState(null);
   const [loading, setLoading] = useState(false);
   const [onChainLoading, setOnChainLoading] = useState(false);
-  const { zkTradeContract } = useWeb3();
+  const { account, zkTradeContract } = useWeb3();
 
   // Function to generate proof via API
-  const generateProof = () => {
-    setLoading(true);
+const generateProof = async () => {
+  if (!zkTradeContract) {
+    alert("Contract is not connected.");
+    return;
+  }
 
-    const data = JSON.stringify({
-      meta: {},
-      proof_input: {
-        initial_balance: initialWorth,
-        final_balance: finalWorth,
-        proof_range: stars,
-        game_number: gameNumber,
+  try {
+    // Retrieve current season (you may need to add a method in your contract for this)
+    const currentSeason = await zkTradeContract.currentSeason();
+
+    // Fetch existing game data from the contract
+    const existingScore = await zkTradeContract.getGameDetails(
+      account,
+      1
+    );
+
+    // Check if score is greater than stars
+    if (existingScore > stars) {
+      alert("Proof for a similar or higher score is already stored.");
+      return;
+    }
+  } catch (error) {
+    console.error("Error checking game details on-chain:", error);
+    alert("Failed to verify existing proof status.");
+    return;
+  }
+
+  setLoading(true);
+
+  const data = JSON.stringify({
+    meta: {},
+    proof_input: {
+      initial_balance: initialWorth,
+      final_balance: finalWorth,
+      proof_range: stars,
+      game_number: gameNumber,
+    },
+    perform_verify: true,
+  });
+
+  axios
+    .post('https://sindri.app/api/v1/circuit/profit-verifier/prove', data, {
+      headers: {
+        'Content-Type': 'application/json',
+        Accept: 'application/json',
+        Authorization: 'Bearer sindri_TAgwZ3w2BVc10fzFFpFZnqiWFHlgRKJi_0Gu4',
       },
-      perform_verify: true,
+    })
+    .then((response) => {
+      const proofId = response.data.proof_id;
+
+      // Fetch proof details after a delay
+      setTimeout(() => fetchProofDetails(proofId), 5000);
+    })
+    .catch((error) => {
+      console.error("Error generating proof:", error);
+      setLoading(false);
     });
+};
+  
 
-    axios
-      .post('https://sindri.app/api/v1/circuit/profit-verifier/prove', data, {
-        headers: {
-          'Content-Type': 'application/json',
-          Accept: 'application/json',
-          Authorization: 'Bearer sindri_TAgwZ3w2BVc10fzFFpFZnqiWFHlgRKJi_0Gu4',
-        },
-      })
-      .then((response) => {
-        const proofId = response.data.proof_id;
-
-        // Fetch proof details after a delay
-        setTimeout(() => fetchProofDetails(proofId), 5000);
-      })
-      .catch((error) => {
-        console.error("Error generating proof:", error);
-        setLoading(false);
-      });
-  };
 
   // Fetch proof details using proofId
   const fetchProofDetails = (proofId) => {
