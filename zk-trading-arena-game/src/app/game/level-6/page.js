@@ -126,9 +126,9 @@ export default function Level6() {
 
     const profitPercentage = ((finalWorth - initialWorth) / initialWorth) * 100;
     let stars = 0;
-    if (profitPercentage >= 60) stars = 3;
-    else if (profitPercentage >= 40) stars = 2;
-    else if (profitPercentage >= 20) stars = 1;
+    if (profitPercentage > 40) stars = 3;
+    else if (profitPercentage >= 21) stars = 2;
+    else if (profitPercentage >= 0) stars = 1;
 
     setFinalStats({
       finalWorth,
@@ -271,7 +271,7 @@ export default function Level6() {
               <ProofGenerator
                 initialWorth={3500}
                 finalWorth={finalStats.finalWorth}
-                stars={finalStats.stars - 1}
+                stars={finalStats.stars}
                 gameNumber={6}
               />
             </div>

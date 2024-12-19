@@ -119,9 +119,9 @@ export default function Level7() {
 
     const profitPercentage = ((finalWorth - initialWorth) / initialWorth) * 100;
     let stars = 0;
-    if (profitPercentage >= 60) stars = 3;
-    else if (profitPercentage >= 40) stars = 2;
-    else if (profitPercentage >= 20) stars = 1;
+    if (profitPercentage > 40) stars = 3;
+    else if (profitPercentage >= 21) stars = 2;
+    else if (profitPercentage >= 0) stars = 1;
 
     setFinalStats({
       finalWorth,
