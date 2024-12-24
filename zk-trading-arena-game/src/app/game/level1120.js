@@ -1,4 +1,4 @@
-"use client";
+'use client';
 
 import { useState } from "react";
 import { useWeb3 } from "../Web3Context";
@@ -18,22 +18,9 @@ export const generateLevel = (gameNumber, title, description, initialMoney, year
     const [finalStats, setFinalStats] = useState({});
     const [currentEvent, setCurrentEvent] = useState("Welcome to the market! Stay tuned for the latest updates.");
 
-    const initialPrices = {
+    const [prices, setPrices] = useState({
       1: { computers: 300, phones: 200, gold: 500, oil: 400, stocks: 600 },
-      2: { computers: 0, phones: 0, gold: 0, oil: 0, stocks: 0 },
-      3: { computers: 0, phones: 0, gold: 0, oil: 0, stocks: 0 },
-      4: { computers: 0, phones: 0, gold: 0, oil: 0, stocks: 0 },
-      5: { computers: 0, phones: 0, gold: 0, oil: 0, stocks: 0 },
-      6: { computers: 0, phones: 0, gold: 0, oil: 0, stocks: 0 },
-    };
-
-    const finalPrices = {
-      computers: 500,
-      phones: 350,
-      gold: 800,
-      oil: 600,
-      stocks: 1000,
-    };
+    });
 
     const randomEvents = [
       { event: "Tech Boom: Computers and phones increase by 25%", target: ["computers", "phones"], multiplier: 1.25 },
@@ -43,7 +30,6 @@ export const generateLevel = (gameNumber, title, description, initialMoney, year
     ];
 
     const entryFee = ethers.utils.parseEther("0.001");
-    const [prices, setPrices] = useState(initialPrices);
 
     const handleEnterGame = async () => {
       if (!zkTradeContract || !account) {
@@ -75,11 +61,11 @@ export const generateLevel = (gameNumber, title, description, initialMoney, year
       }
     };
 
-    const applyRandomEvent = () => {
+    const applyRandomEvent = (updatedYear) => {
       const event = randomEvents[Math.floor(Math.random() * randomEvents.length)];
       setCurrentEvent(event.event);
 
-      const updatedPrices = { ...prices[year] };
+      const updatedPrices = { ...prices[updatedYear - 1] };
 
       if (event.target) {
         event.target.forEach((item) => {
@@ -91,7 +77,7 @@ export const generateLevel = (gameNumber, title, description, initialMoney, year
         }
       }
 
-      setPrices((prev) => ({ ...prev, [year]: updatedPrices }));
+      setPrices((prev) => ({ ...prev, [updatedYear]: updatedPrices }));
     };
 
     const calculatePortfolioValue = () => {
@@ -121,20 +107,27 @@ export const generateLevel = (gameNumber, title, description, initialMoney, year
 
     const moveToNextYear = () => {
       if (year < years) {
-        setYear((prev) => prev + 1);
-        applyRandomEvent();
+        const nextYear = year + 1;
+        applyRandomEvent(nextYear);
+        setYear(nextYear);
       }
     };
 
     const calculateProfit = () => {
       const initialWorth = initialMoney;
+      const dynamicFinalPrices = Object.keys(positions).reduce((acc, item) => {
+        const randomMultiplier = 1 + (Math.random() * (eventMultiplierRange[1] - eventMultiplierRange[0]) + eventMultiplierRange[0] - 1);
+        acc[item] = Math.round(prices[years][item] * randomMultiplier);
+        return acc;
+      }, {});
+
       const finalWorth =
         money +
-        positions.computers * finalPrices.computers +
-        positions.phones * finalPrices.phones +
-        positions.gold * finalPrices.gold +
-        positions.oil * finalPrices.oil +
-        positions.stocks * finalPrices.stocks;
+        positions.computers * dynamicFinalPrices.computers +
+        positions.phones * dynamicFinalPrices.phones +
+        positions.gold * dynamicFinalPrices.gold +
+        positions.oil * dynamicFinalPrices.oil +
+        positions.stocks * dynamicFinalPrices.stocks;
 
       const profitPercentage = ((finalWorth - initialWorth) / initialWorth) * 100;
       let stars = 0;
@@ -251,6 +244,9 @@ export const generateLevel = (gameNumber, title, description, initialMoney, year
                   Stars Earned: {finalStats.stars} Star(s)
                 </p>
                 <ProofGenerator
+                  initialPrices={prices[1]} 
+                  updatedPrices={prices[years]}   
+                  positions={positions} 
                   initialWorth={initialMoney}
                   finalWorth={finalStats.finalWorth}
                   stars={finalStats.stars - 1}

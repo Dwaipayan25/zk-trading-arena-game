@@ -109,9 +109,10 @@ const ProofGenerator = ({ initialPrices, updatedPrices, positions, initialWorth,
       }
 
       setProofData(proof.proof);
-
+      setLoading(false);
       // Save proof on-chain
       setOnChainLoading(true);
+      
       const proofBytes = ethers.utils.arrayify("0x" + proof.proof);
 
       const tx = await zkTradeContract.saveGameDetails(gameNumber, stars + 1, proofBytes);
@@ -150,7 +151,7 @@ const ProofGenerator = ({ initialPrices, updatedPrices, positions, initialWorth,
       )}
 
       {loading && <p className="mt-4 text-blue-500">Generating proof...</p>}
-      {onChainLoading && <p className="mt-4 text-green-500">Saving proof on-chain...</p>}
+      {!loading && onChainLoading && <p className="mt-4 text-green-500">Saving proof on-chain...</p>}
     </div>
   );
 };
