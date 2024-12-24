@@ -14,6 +14,7 @@ body {
   background-color: #fff;
   border-bottom: 1px solid #ddd; /* Light border */
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1); /* Subtle shadow */
+  position: relative; /* Ensure proper placement for children */
 }
 
 .logo {
@@ -56,41 +57,42 @@ body {
   color: #333;
   font-size: 1.5rem;
   cursor: pointer;
+  position: absolute; /* Align within the navbar */
+  right: 1rem; /* Position the hamburger button to the right */
 }
 
 .connect-button {
-    background-color: #0070f3;
-    color: #fff;
-    border: none;
-    padding: 0.5rem 1rem;
-    font-size: 1rem;
-    cursor: pointer;
-    transition: background-color 0.3s;
-    border-radius: 4px; /* Rounded corners */
-  }
-  
-  .connect-button:hover {
-    background-color: #005bb5; /* Darker blue on hover */
-  }
-  
-  .connect-button.connected {
-    background-color: #28a745; /* Green background when connected */
-    color: #fff;
-  }
+  background-color: #0070f3;
+  color: #fff;
+  border: none;
+  padding: 0.5rem 1rem;
+  font-size: 1rem;
+  cursor: pointer;
+  transition: background-color 0.3s;
+  border-radius: 4px; /* Rounded corners */
+}
 
-  .xp-box {
-    margin-right: 1rem; /* Space between XP box and "Level Up" */
-    display: inline-block;
-    background-color: #facc15; /* Bright yellow */
-    color: #000; /* Black text */
-    font-size: 1rem;
-    font-weight: bold;
-    border-radius: 8px;
-    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-    padding: 0.5rem 1rem;
-    text-align: center;
-  }
-  
+.connect-button:hover {
+  background-color: #005bb5; /* Darker blue on hover */
+}
+
+.connect-button.connected {
+  background-color: #28a745; /* Green background when connected */
+  color: #fff;
+}
+
+.xp-box {
+  margin-right: 1rem; /* Space between XP box and "Level Up" */
+  display: inline-block;
+  background-color: #facc15; /* Bright yellow */
+  color: #000; /* Black text */
+  font-size: 1rem;
+  font-weight: bold;
+  border-radius: 8px;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  padding: 0.5rem 1rem;
+  text-align: center;
+}
 
 @media (max-width: 768px) {
   .nav-links {
@@ -113,4 +115,3 @@ body {
     flex-direction: row;
   }
 }
-

@@ -41,6 +41,13 @@ export default function Home() {
             Take Challenge
           </Link>
         </div>
+        <div className="feature-card">
+          <h2>Scoreboard</h2>
+          <p>See where you stand!</p>
+          <Link href="/scoreboard" className="btn">
+            Scoreboard
+          </Link>
+        </div>
       </div>
 
       {/* Rules Section */}

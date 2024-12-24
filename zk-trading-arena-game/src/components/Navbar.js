@@ -38,6 +38,9 @@ const Navbar = () => {
           </li>
         )}
 
+        <li className={pathname === "/scoreboard" ? "active" : ""}>
+          <Link href="/scoreboard">Scoreboard</Link>
+        </li>
         <li className={pathname === "/level-up" ? "active" : ""}>
           <Link href="/level-up">Level Up</Link>
         </li>
