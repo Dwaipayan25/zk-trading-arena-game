@@ -252,9 +252,12 @@ export default function Level7() {
               </p>
               <p className="text-lg mb-4">Stars Earned: {finalStats.stars}⭐️</p>
               <ProofGenerator
+                initialPrices={initialPrices[1]} // Ensure this exists
+                updatedPrices={finalPrices}   // Ensure this exists
+                positions={positions}           // Ensure positions are valid
                 initialWorth={4000}
-                finalWorth={finalStats.finalWorth}
-                stars={finalStats.stars - 1}
+                finalWorth={finalStats?.finalWorth || 0} // Fallback if finalStats is undefined
+                stars={finalStats?.stars - 1 || 0}       // Fallback for stars
                 gameNumber={7}
               />
             </div>

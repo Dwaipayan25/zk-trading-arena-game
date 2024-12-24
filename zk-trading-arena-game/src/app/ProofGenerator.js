@@ -3,158 +3,154 @@
 import React, { useState } from 'react';
 import axios from 'axios';
 import { ethers } from 'ethers';
-import { useWeb3 } from './Web3Context'; // Web3 Context for zkTradeContract
+import { useWeb3 } from './Web3Context';
 
-const ProofGenerator = ({ initialWorth, finalWorth, stars, gameNumber }) => {
+// Component to display positions and percentage changes
+const PositionSummary = ({ initialPrices, updatedPrices, positions }) => {
+  const calculateChange = (initial, updated) => (((updated - initial) / initial) * 100).toFixed(2);
+
+  return (
+    <div className="mt-6">
+      <h3 className="text-lg font-bold">Position Summary</h3>
+      <table className="w-full mt-4 text-left">
+        <thead>
+          <tr>
+            <th className="border px-4 py-2">Item</th>
+            <th className="border px-4 py-2">% Change</th>
+            <th className="border px-4 py-2">Position</th>
+          </tr>
+        </thead>
+        <tbody>
+          {Object.keys(initialPrices).map((item) => (
+            <tr key={item}>
+              <td className="border px-4 py-2 capitalize">{item}</td>
+              <td className="border px-4 py-2">
+                {calculateChange(initialPrices[item], updatedPrices[item])}%
+              </td>
+              <td className="border px-4 py-2">{positions[item]}</td>
+            </tr>
+          ))}
+        </tbody>
+      </table>
+    </div>
+  );
+};
+
+const ProofGenerator = ({ initialPrices, updatedPrices, positions, initialWorth, finalWorth, stars, gameNumber }) => {
   const [proofData, setProofData] = useState(null);
   const [loading, setLoading] = useState(false);
   const [onChainLoading, setOnChainLoading] = useState(false);
   const { account, zkTradeContract } = useWeb3();
 
-  // Function to generate proof via API
-const generateProof = async () => {
-  if (!zkTradeContract) {
-    alert("Contract is not connected.");
-    return;
-  }
-
-  try {
-    // Retrieve current season (you may need to add a method in your contract for this)
-    const currentSeason = await zkTradeContract.currentSeason();
-
-    // Fetch existing game data from the contract
-    const existingScore = await zkTradeContract.getGameDetails(
-      account,
-      gameNumber
-    );
-
-    // Check if score is greater than stars
-    if (existingScore > stars) {
-      alert("Proof for a similar or higher score is already stored.");
+  const generateAndSaveProof = async () => {
+    if (!zkTradeContract) {
+      alert("Contract is not connected.");
       return;
     }
-  } catch (error) {
-    console.error("Error checking game details on-chain:", error);
-    alert("Failed to verify existing proof status.");
-    return;
-  }
 
-  setLoading(true);
-
-  const data = JSON.stringify({
-    meta: {},
-    proof_input: {
-      initial_balance: initialWorth,
-      final_balance: finalWorth,
-      proof_range: stars,
-      game_number: gameNumber,
-    },
-    perform_verify: true,
-  });
-
-  axios
-    .post('https://sindri.app/api/v1/circuit/profit-verifier/prove', data, {
-      headers: {
-        'Content-Type': 'application/json',
-        Accept: 'application/json',
-        Authorization: 'Bearer sindri_TAgwZ3w2BVc10fzFFpFZnqiWFHlgRKJi_0Gu4',
-      },
-    })
-    .then((response) => {
-      const proofId = response.data.proof_id;
-
-      // Fetch proof details after a delay
-      setTimeout(() => fetchProofDetails(proofId), 5000);
-    })
-    .catch((error) => {
-      console.error("Error generating proof:", error);
-      setLoading(false);
-    });
-};
-  
-
-
-  // Fetch proof details using proofId
-  const fetchProofDetails = (proofId) => {
-    axios
-      .get(`https://sindri.app/api/v1/proof/${proofId}/detail`, {
-        headers: {
-          Accept: 'application/json',
-          Authorization: 'Bearer sindri_TAgwZ3w2BVc10fzFFpFZnqiWFHlgRKJi_0Gu4',
-        },
-      })
-      .then((response) => {
-        const { proof } = response.data;
-        setProofData(proof.proof); // Store proof only
-        setLoading(false);
-      })
-      .catch((error) => {
-        console.error("Error fetching proof details:", error);
-        setLoading(false);
-      });
-  };
-
-  // Save proof to blockchain
-  const saveProofOnChain = async () => {
-    if (!zkTradeContract || !proofData) {
-      alert("Contract or proof data is missing.");
-      return;
-    }
+    setLoading(true);
 
     try {
-      setOnChainLoading(true);
+      // Check if proof for the game already exists
+      const existingScoreBigNumber = await zkTradeContract.getGameDetails(account, gameNumber);
+      const existingScore = existingScoreBigNumber.toNumber();
+      if (existingScore > stars) {
+        console.log(existingScore);
+        alert("Proof for a similar or higher score is already stored.");
+        setLoading(false);
+        return;
+      }
 
-      // Convert proof string to bytes
-      const proofBytes = ethers.utils.arrayify("0x" + proofData);
+      // Generate proof
+      const data = JSON.stringify({
+        meta: {},
+        proof_input: {
+          initial_balance: initialWorth,
+          final_balance: finalWorth,
+          proof_range: stars,
+          game_number: gameNumber,
+        },
+        perform_verify: true,
+      });
 
-      // Call saveGameDetails on the contract
-      const tx = await zkTradeContract.saveGameDetails(
-        gameNumber,
-        stars + 1, // Increment stars as per the contract logic
-        proofBytes
+      const response = await axios.post(
+        'https://sindri.app/api/v1/circuit/profit-verifier/prove',
+        data,
+        {
+          headers: {
+            'Content-Type': 'application/json',
+            Accept: 'application/json',
+            Authorization: 'Bearer sindri_TAgwZ3w2BVc10fzFFpFZnqiWFHlgRKJi_0Gu4',
+          },
+        }
       );
 
+      const proofId = response.data.proof_id;
+      if (!proofId) {
+        throw new Error("Proof ID is missing in the response.");
+      }
+
+      // Wait 4-5 seconds before fetching proof details
+      await new Promise((resolve) => setTimeout(resolve, 5000));
+
+      const proofResponse = await axios.get(
+        `https://sindri.app/api/v1/proof/${proofId}/detail`,
+        {
+          headers: {
+            Accept: 'application/json',
+            Authorization: 'Bearer sindri_TAgwZ3w2BVc10fzFFpFZnqiWFHlgRKJi_0Gu4',
+          },
+        }
+      );
+
+      const { proof } = proofResponse.data;
+      if (!proof?.proof) {
+        throw new Error("Proof data is missing.");
+      }
+
+      setProofData(proof.proof);
+
+      // Save proof on-chain
+      setOnChainLoading(true);
+      const proofBytes = ethers.utils.arrayify("0x" + proof.proof);
+
+      const tx = await zkTradeContract.saveGameDetails(gameNumber, stars + 1, proofBytes);
       await tx.wait();
-      alert("Proof saved on-chain successfully!");
+
+      alert("Proof generated and saved on-chain successfully!");
     } catch (error) {
-      console.error("Error saving proof on-chain:", error);
-      alert("Failed to save proof on-chain.");
+      console.error("Error generating or saving proof:", error);
+      alert("Failed to generate or save proof.");
     } finally {
+      setLoading(false);
       setOnChainLoading(false);
     }
   };
 
   return (
     <div className="proof-generator">
-      {/* Generate Proof Button */}
+      <PositionSummary
+        initialPrices={initialPrices}
+        updatedPrices={updatedPrices}
+        positions={positions}
+      />
       <button
-        onClick={generateProof}
-        className="bg-yellow-500 text-white px-4 py-2 rounded"
-        disabled={loading}
+        onClick={generateAndSaveProof}
+        className="bg-yellow-500 text-white px-4 py-2 rounded mt-6"
+        disabled={loading || onChainLoading}
       >
-        {loading ? "Generating Proof..." : "Generate Proof"}
+        {loading || onChainLoading ? "Processing..." : "Generate & Save Proof"}
       </button>
 
-      {loading && <p>Generating proof...</p>}
-
-      {/* Display Proof */}
       {proofData && (
         <div className="proof-details mt-4">
-          <h3 className="text-lg font-bold">Proof</h3>
+          <h3 className="text-lg font-bold">Generated Proof</h3>
           <pre className="bg-gray-100 p-2 rounded overflow-x-auto">{proofData}</pre>
-
-          {/* Save Proof On-Chain */}
-          <button
-            onClick={saveProofOnChain}
-            className={`bg-green-500 text-white px-4 py-2 rounded mt-4 ${
-              onChainLoading && "opacity-50 cursor-not-allowed"
-            }`}
-            disabled={onChainLoading}
-          >
-            {onChainLoading ? "Saving Proof..." : "Save Proof to Blockchain"}
-          </button>
         </div>
       )}
+
+      {loading && <p className="mt-4 text-blue-500">Generating proof...</p>}
+      {onChainLoading && <p className="mt-4 text-green-500">Saving proof on-chain...</p>}
     </div>
   );
 };
