@@ -34,7 +34,7 @@ export default function LevelUp() {
         {levels.map((level) => (
           <Link key={level.level} href={`/game/level-${level.level}`} passHref>
             <div
-              className="p-4 border rounded-lg text-center cursor-pointer bg-blue-300 text-blue-900 border-blue-400"
+              className="p-4 border rounded-lg text-center cursor-pointer bg-blue-100 text-blue-900 border-blue-400"
             >
               <h2 className="text-xl font-bold">Level {level.level}</h2>
               <p className="text-black">{level.title}</p>
