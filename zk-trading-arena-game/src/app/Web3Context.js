@@ -1,6 +1,6 @@
 "use client";
 
-import React, { createContext, useState, useContext } from "react";
+import React, { createContext, useState, useEffect, useContext } from "react";
 import ZktradeContractABI from "../app/contracts/Zktrade.json";
 import { ethers } from "ethers";
 
@@ -11,6 +11,7 @@ export const Web3Provider = ({ children }) => {
   const [account, setAccount] = useState(null);
   const [zkTradeContract, setZkTradeContract] = useState(null);
   const [provider, setProvider] = useState(null);
+  const [xp, setXp] = useState(0); // Global XP state
 
   // Connect to MetaMask and load contract
   const web3Handler = async () => {
@@ -30,8 +31,25 @@ export const Web3Provider = ({ children }) => {
     setZkTradeContract(zkTradeContract);
   };
 
+  const fetchXP = async () => {
+    try {
+      if (zkTradeContract && account) {
+        const xpValue = await zkTradeContract.getXP(account);
+        setXp(Number(xpValue)); // Convert BigNumber to Number
+      }
+    } catch (error) {
+      console.error("Error fetching XP:", error);
+    }
+  };
+
+  useEffect(() => {
+    if (account) {
+      fetchXP();
+    }
+  }, [account, zkTradeContract]);
+
   return (
-    <Web3Context.Provider value={{ web3Handler, account, zkTradeContract, provider }}>
+    <Web3Context.Provider value={{ web3Handler, account, zkTradeContract, provider, xp, fetchXP }}>
       {children}
     </Web3Context.Provider>
   );

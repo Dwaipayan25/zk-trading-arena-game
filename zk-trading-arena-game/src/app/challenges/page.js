@@ -25,11 +25,15 @@ const levels = [
   { gameNumber: 18, title: "Level 18: Immortal Trader", description: "Leave an immortal legacy in the trading world." },
   { gameNumber: 19, title: "Level 19: Divine Trader", description: "Trade with divine intuition and skill." },
   { gameNumber: 20, title: "Level 20: Omnipotent Trader", description: "Become the omnipotent force in trading." },
+  { gameNumber: 21, title: "COVID-19 Simulation", description: "Navigate volatile markets during the COVID-19 pandemic." },
+  { gameNumber: 22, title: "Russia-Ukraine Conflict", description: "Manage assets amid geopolitical tensions and economic uncertainty." },
+  { gameNumber: 23, title: "US Elections Simulation", description: "Trade through market shifts driven by US Election events." },
 ];
 
 
+
 const ClaimXP = () => {
-  const { zkTradeContract, account } = useWeb3(); // Access smart contract
+  const { zkTradeContract, account, fetchXP } = useWeb3(); // Access smart contract
   const [loadingLevel, setLoadingLevel] = useState(null); // Track which level is processing
   const [successMessage, setSuccessMessage] = useState(null); // Success messages for feedback
   const [errorMessage, setErrorMessage] = useState(null); // Error message for feedback
@@ -50,6 +54,7 @@ const ClaimXP = () => {
       await tx.wait();
 
       setSuccessMessage(`XP claimed successfully for Game ${gameNumber}!`);
+      fetchXP(); // Refresh XP after claiming
     } catch (error) {
       console.error(`Error claiming XP for Game ${gameNumber}:`, error);
       setErrorMessage(`Failed to claim XP for Game ${gameNumber}.`);

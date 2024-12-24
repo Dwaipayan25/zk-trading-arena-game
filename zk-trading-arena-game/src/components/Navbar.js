@@ -7,9 +7,8 @@ import { useWeb3 } from "../app/Web3Context";
 import "./styles.css";
 
 const Navbar = () => {
-  const { web3Handler, account, zkTradeContract } = useWeb3();
+  const { web3Handler, account, zkTradeContract ,xp} = useWeb3();
   const [isOpen, setIsOpen] = useState(false);
-  const [xp, setXp] = useState(0); // State for XP
   const pathname = usePathname();
 
   const toggleNavbar = () => {
@@ -19,25 +18,7 @@ const Navbar = () => {
   const formatAccount = (account) => {
     return `${account.slice(0, 6)}...${account.slice(-4)}`;
   };
-
-  // Fetch XP for the connected account
-  const fetchXP = async () => {
-    try {
-      if (zkTradeContract && account) {
-        const xpValue = await zkTradeContract.getXP(account);
-        setXp(Number(xpValue)); // Convert BigNumber to Number
-      }
-    } catch (error) {
-      console.error("Error fetching XP:", error);
-    }
-  };
-
-  // Fetch XP when account or contract changes
-  useEffect(() => {
-    if (account) {
-      fetchXP();
-    }
-  }, [account, zkTradeContract]);
+  
 
   return (
     <nav className={`navbar ${isOpen ? "active" : ""}`}>
