@@ -1,8 +1,6 @@
 import Link from "next/link";
 
 export default function LevelUp() {
-  const currentLevel = 5;
-  const maxLevel = 20;
   const levels = [
     { level: 1, title: "Rookie Trader" },
     { level: 2, title: "Novice Trader" },
@@ -31,27 +29,15 @@ export default function LevelUp() {
       <h1 className="text-3xl font-bold mb-4">Level Up</h1>
       <p className="mb-6">Track your progress and unlock new trading titles.</p>
 
-      {/* Progress Bar */}
-      <div className="w-full bg-gray-200 rounded-full h-6 mb-6">
-        <div
-          className="bg-blue-600 h-6 rounded-full"
-          style={{ width: `${(currentLevel / maxLevel) * 100}%` }}
-        ></div>
-      </div>
-
       {/* Level Cards */}
       <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
         {levels.map((level) => (
           <Link key={level.level} href={`/game/level-${level.level}`} passHref>
             <div
-              className={`p-4 border rounded-lg text-center cursor-pointer ${
-                level.level <= currentLevel
-                  ? "bg-blue-100 border-blue-500"
-                  : "bg-gray-100 border-gray-300 text-gray-500"
-              }`}
+              className="p-4 border rounded-lg text-center cursor-pointer bg-blue-300 text-blue-900 border-blue-400"
             >
               <h2 className="text-xl font-bold">Level {level.level}</h2>
-              <p>{level.title}</p>
+              <p className="text-black">{level.title}</p>
             </div>
           </Link>
         ))}

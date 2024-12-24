@@ -21,9 +21,9 @@ export default function Home() {
           </Link>
         </div>
         <div className="feature-card">
-          <h2>Arena Battles</h2>
-          <p>Compete in head-to-head trading duels and prove your skills!</p>
-          <Link href="/arena-battles" className="btn">
+          <h2>Real World Simulations</h2>
+          <p>Engage in Real World market conditions and show your skills!</p>
+          <Link href="/real-world-simulations" className="btn">
             Fight Now
           </Link>
         </div>
