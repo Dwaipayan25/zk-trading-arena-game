@@ -243,10 +243,14 @@ export default function Level8() {
                 Profit Percentage: {finalStats.profitPercentage.toFixed(2)}%
               </p>
               <p className="text-lg mb-4">Stars Earned: {finalStats.stars}⭐️</p>
+            
               <ProofGenerator
+                initialPrices={initialPrices[1]} 
+                updatedPrices={finalPrices}   
+                positions={positions}           
                 initialWorth={4000}
-                finalWorth={finalStats.finalWorth}
-                stars={finalStats.stars - 1}
+                finalWorth={finalStats?.finalWorth || 0}
+                stars={finalStats?.stars - 1 || 0}    
                 gameNumber={8}
               />
             </div>

@@ -280,6 +280,9 @@ export default function Level5() {
               <p className="text-lg mb-4">Profit Percentage: {finalStats.profitPercentage.toFixed(2)}%</p>
               <p className="text-lg mb-4">Stars Earned: {finalStats.stars}⭐️</p>
               <ProofGenerator
+                initialPrices={prices[1]}
+                updatedPrices={finalPrices}
+                positions={positions}
                 initialWorth={3000}
                 finalWorth={finalStats.finalWorth}
                 stars={finalStats.stars - 1}
