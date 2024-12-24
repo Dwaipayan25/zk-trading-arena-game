@@ -267,10 +267,14 @@ export default function Level10() {
               <p className="text-lg mb-4">
                 Stars Earned: {finalStats.stars} Star(s)
               </p>
+              
               <ProofGenerator
+                initialPrices={initialPrices[1]} 
+                updatedPrices={finalPrices}   
+                positions={positions}           
                 initialWorth={5000}
-                finalWorth={finalStats.finalWorth}
-                stars={finalStats.stars - 1}
+                finalWorth={finalStats?.finalWorth || 0}
+                stars={finalStats?.stars - 1 || 0}    
                 gameNumber={10}
               />
             </div>
