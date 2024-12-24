@@ -68,33 +68,46 @@ export default function Home() {
 </section>
 
 
-      {/* Motivation Section */}
-      <section className="py-10 bg-blue-100">
-        <h2 className="text-3xl font-bold text-center mb-8">💡 Motivation Behind This</h2>
-        <div className="max-w-4xl mx-auto text-center">
-          <p className="text-lg text-blue-900">
-            ZK-Trading-Arena-Game was born out of the need to bridge the gap between trading education and real-world application. By integrating gaming mechanics with decentralized technology, we aim to create a platform that is as engaging as it is educational. 
-            <br />
-            Our mission is to empower individuals to gain trading skills in a gamified environment, leveraging Zero-Knowledge (ZK) proofs for fairness and trust. The platform also aligns with the OpenCampus mission by combining SocialFi and GameFi to create a scalable model for decentralized education.
-          </p>
-        </div>
-      </section>
+{/* Motivation Section */}
+<section className="py-10 bg-blue-100">
+  <h2 className="text-4xl font-bold text-center mb-8">💡 Motivation Behind This</h2>
+  <div className="max-w-5xl mx-auto text-center">
+    <p className="text-lg text-blue-900 leading-relaxed">
+      🌟 <span className="font-bold">ZK-Trading-Arena-Game</span> was born out of the need to bridge the gap between trading education and real-world application. By integrating gaming mechanics with decentralized technology, we aim to create a platform that is as engaging as it is educational.
+      <br /><br />
+      🎯 Our mission is to empower individuals to gain trading skills in a gamified environment, leveraging <span className="font-bold">Zero-Knowledge (ZK) proofs</span> for fairness and trust. The platform also aligns with the OpenCampus mission by combining <span className="font-bold">SocialFi</span> and <span className="font-bold">GameFi</span> to create a scalable model for decentralized education.
+    </p>
+  </div>
+</section>
 
-      {/* What We Are Solving Section */}
-      <section className="py-10">
-        <h2 className="text-3xl font-bold text-center mb-8 text-blue-900">🛠️ What We Are Solving</h2>
-        <div className="max-w-4xl mx-auto text-center">
-          <div className="text-lg text-blue-900">
-            ZK-Trading-Arena addresses key challenges in trading education and blockchain literacy:
-          </div>
-          <ul className="list-disc list-inside mt-4 text-lg text-blue-900 text-left">
-            <li>Providing a fun, interactive way to learn trading and blockchain concepts.</li>
-            <li>Enabling players to gain practical experience in a secure, gamified environment.</li>
-            <li>Ensuring privacy through Zero-Knowledge proofs, allowing players to verify their profitability without exposing sensitive strategies.</li>
-            <li>Distributing rewards fairly at the end of each season, with 90% of funds collected from entry fees going back to players.</li>
-          </ul>
-        </div>
-      </section>
+{/* What We Are Solving Section */}
+<section className="py-10 bg-white">
+  <h2 className="text-4xl font-bold text-center mb-8 text-blue-900">🛠️ What We Are Solving</h2>
+  <div className="max-w-5xl mx-auto text-center">
+    <p className="text-lg text-blue-900 leading-relaxed">
+      ZK-Trading-Arena addresses key challenges in trading education and blockchain literacy by providing an innovative platform that combines learning with gamification:
+    </p>
+    <ul className="list-none mt-8 space-y-4 text-lg text-blue-900 text-left mx-auto">
+      <li className="flex items-center">
+        <span className="text-2xl mr-3">🎮</span>
+        <span>Providing a <span className="font-bold">fun</span>, interactive way to learn trading and blockchain concepts.</span>
+      </li>
+      <li className="flex items-center">
+        <span className="text-2xl mr-3">🛡️</span>
+        <span>Enabling players to gain practical experience in a secure, gamified environment.</span>
+      </li>
+      <li className="flex items-center">
+        <span className="text-2xl mr-3">🔒</span>
+        <span>Ensuring <span className="font-bold">privacy</span> through Zero-Knowledge proofs, allowing players to verify their profitability without exposing sensitive strategies.</span>
+      </li>
+      <li className="flex items-center">
+        <span className="text-2xl mr-3">💰</span>
+        <span>Distributing rewards fairly at the end of each season, with <span className="font-bold">90%</span> of funds collected from entry fees going back to players.</span>
+      </li>
+    </ul>
+  </div>
+</section>
+
 
 
     </div>
