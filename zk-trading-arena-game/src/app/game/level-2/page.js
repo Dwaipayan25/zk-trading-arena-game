@@ -240,6 +240,9 @@ export default function Level2() {
                 Stars: {finalStats.stars}⭐️
               </p>
               <ProofGenerator
+                initialPrices={initialPrices[1]}
+                updatedPrices={updatedPrices}
+                positions={positions}
                 initialWorth={1500}
                 finalWorth={finalStats.finalWorth}
                 stars={finalStats.stars - 1}

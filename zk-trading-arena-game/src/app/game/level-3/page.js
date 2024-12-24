@@ -263,8 +263,11 @@ export default function Level3() {
                 Stars: {finalStats.stars}⭐️
               </p>
               <ProofGenerator
+                initialPrices={prices[1]}
+                updatedPrices={finalPrices}
+                positions={positions}
                 initialWorth={2000}
-                finalWorth={finalStats.finalWorth.toFixed(0)}
+                finalWorth={finalStats.finalWorth}
                 stars={finalStats.stars - 1}
                 gameNumber={3}
               />
