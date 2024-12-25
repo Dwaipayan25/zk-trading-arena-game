@@ -2,6 +2,7 @@
 
 import Link from "next/link";
 import React from "react";
+import '@fortawesome/fontawesome-free/css/all.min.css';
 
 export default function Home() {
   return (
@@ -107,9 +108,45 @@ export default function Home() {
     </ul>
   </div>
 </section>
+<section className="py-10 bg-blue-50">
+  <h2 className="text-4xl font-bold text-center mb-8 text-blue-900">🤝 Meet the Team</h2>
+  <div className="max-w-5xl mx-auto flex flex-col md:flex-row items-center bg-white shadow-lg rounded-lg p-6">
+    {/* Left Side: Name and Details */}
+    <div className="md:flex-1 text-center md:text-left">
+      <h3 className="text-3xl font-bold text-blue-900 mb-4">Dwaipayan Dehury</h3>
+      <p className="text-lg text-blue-700 mb-6">Full Stack WEB3 Developer</p>
+      <div className="flex justify-center md:justify-start space-x-6">
+        {/* Twitter Link */}
+        <a
+          href="https://twitter.com/dwaipayan01"
+          target="_blank"
+          rel="noopener noreferrer"
+          className="text-blue-500 hover:text-blue-700 transition"
+        >
+          <i className="fab fa-twitter text-2xl"></i>
+        </a>
+        {/* LinkedIn Link */}
+        <a
+          href="https://www.linkedin.com/in/dwaipayan-dehury-aa0a50166/"
+          target="_blank"
+          rel="noopener noreferrer"
+          className="text-blue-500 hover:text-blue-700 transition"
+        >
+          <i className="fab fa-linkedin text-2xl"></i>
+        </a>
+      </div>
+    </div>
 
-
-
+    {/* Right Side: Profile Picture */}
+    <div className="md:flex-1 text-center mt-6 md:mt-0 md:ml-8">
+      <img
+        src="images/image.png"
+        alt="Dwaipayan Dehury"
+        className="w-48 h-48 rounded-lg object-cover shadow-md mx-auto"
+      />
+    </div>
+  </div>
+</section>
     </div>
   );
 }
