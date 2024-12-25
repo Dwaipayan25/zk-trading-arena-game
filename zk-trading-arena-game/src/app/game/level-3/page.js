@@ -267,7 +267,7 @@ export default function Level3() {
                 updatedPrices={finalPrices}
                 positions={positions}
                 initialWorth={2000}
-                finalWorth={finalStats.finalWorth}
+                finalWorth={finalStats.finalWorth.toFixed(0)}
                 stars={finalStats.stars - 1}
                 gameNumber={3}
               />

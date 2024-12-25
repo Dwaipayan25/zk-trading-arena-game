@@ -264,7 +264,7 @@ export default function Level6() {
             <div className="text-center">
               <h1 className="text-3xl font-bold mb-4">Game Over</h1>
               <p className="text-lg mb-4">
-                Final Portfolio Value: ${finalStats.finalWorth.toFixed(2)}
+                Final Portfolio Value: ${finalStats.finalWorth.toFixed(0)}
               </p>
               <p className="text-lg mb-4">Profit Percentage: {finalStats.profitPercentage.toFixed(2)}%</p>
               <p className="text-lg mb-4">Stars Earned: {finalStats.stars}⭐️</p>
@@ -273,7 +273,7 @@ export default function Level6() {
                 updatedPrices={prices[3]}
                 positions={positions}
                 initialWorth={3500}
-                finalWorth={finalStats.finalWorth}
+                finalWorth={finalStats.finalWorth.toFixed(0)}
                 stars={finalStats.stars - 1}
                 gameNumber={6}
               />
