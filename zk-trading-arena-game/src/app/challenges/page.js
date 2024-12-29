@@ -65,6 +65,19 @@ const ClaimXP = () => {
 
   return (
     <div className="container mx-auto p-6">
+
+      {/* Feedback Section */}
+      {successMessage && (
+        <div className="mt-6 text-green-600 text-center font-semibold">
+          {successMessage}
+        </div>
+      )}
+      {errorMessage && (
+        <div className="mt-6 text-red-600 text-center font-semibold">
+          {errorMessage}
+        </div>
+      )}
+      
       <h1 className="text-4xl font-bold text-center mb-6">Claim XP for Your Levels</h1>
 
       {/* Display Levels */}
@@ -93,17 +106,7 @@ const ClaimXP = () => {
         ))}
       </div>
 
-      {/* Feedback Section */}
-      {successMessage && (
-        <div className="mt-6 text-green-600 text-center font-semibold">
-          {successMessage}
-        </div>
-      )}
-      {errorMessage && (
-        <div className="mt-6 text-red-600 text-center font-semibold">
-          {errorMessage}
-        </div>
-      )}
+      
     </div>
   );
 };

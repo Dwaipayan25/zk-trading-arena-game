@@ -103,7 +103,7 @@ export default function Home() {
             </li>
             <li className="flex items-center">
               <span className="text-2xl mr-3">💰</span>
-              <span>Distributing rewards fairly at the end of each season, with <span className="font-bold">90%</span> of funds collected from entry fees going back to players.</span>
+              <span>Distributing rewards fairly at the end of each season, with <span className="font-bold">80%</span> of funds collected from entry fees going back to players.</span>
             </li>
           </ul>
         </div>
