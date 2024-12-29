@@ -85,16 +85,10 @@ ZKTradingArena is divided into three key sections that ensure an engaging and ed
 </div>
 
 ### **LevelUp Section**
-<table style="width: 100%; table-layout: fixed;">
-  <tr>
-    <td style="width: 50%; vertical-align: top;">
-      <img src="Photos/LevelUpLevels.png" alt="Level Up Levels" style="width: 100%; height: auto;" />
-    </td>
-    <td style="width: 50%; vertical-align: top;">
-      <img src="Photos/LevelUp01.png" alt="Level Up 01" style="width: 100%; height: auto;" />
-    </td>
-  </tr>
-</table>
+<div style="display: flex; justify-content: space-between;">
+  <img src="Photos/levelUp.png" alt="ZK Trading Arena" style="width: 100%; height: auto;"/>
+</div>
+
 
 
 - **Purpose:** Introduces users to the basics of DeFi trading, including liquidity provision, arbitrage, and market-making strategies.
@@ -104,10 +98,10 @@ ZKTradingArena is divided into three key sections that ensure an engaging and ed
 
 ### **Real World Simulation Section**
 
-<div style="display: flex; justify-content: space-between;gap: 10px;">
-  <img src="Photos/RealWorld.png" alt="Image 1" style="width: 50%; height: auto;"/>
-  <img src="Photos/RealWorld01.png" alt="Image 2" style="width: 50%; height: auto;"/>
+<div style="display: flex; justify-content: space-between;">
+  <img src="Photos/RealWorld.png" alt="ZK Trading Arena" style="width: 100%; height: auto;"/>
 </div>
+
 
 - **Purpose:** Simulates real-world DeFi trading scenarios, allowing users to apply learned strategies in a risk-free environment.
 - **Mechanics:**
@@ -117,10 +111,10 @@ ZKTradingArena is divided into three key sections that ensure an engaging and ed
 
 ### **ClaimXP and Leaderboard Section**
 
-<div style="display: flex; justify-content: space-between;gap: 10px;">
-  <img src="Photos/Leaderboard.png" alt="Image 1" style="width: 50%; height: auto;"/>
-  <img src="Photos/ClaimXP.png" alt="Image 2" style="width: 50%; height: auto;"/>
+<div style="display: flex; justify-content: space-between;">
+  <img src="Photos/ClaimXP.png" alt="ZK Trading Arena" style="width: 100%; height: auto;"/>
 </div>
+
 
 - **Purpose:** Rewards users for their learning progress and trading achievements.
 - **Mechanics:**
@@ -135,7 +129,7 @@ ZKTradingArena is divided into three key sections that ensure an engaging and ed
 This section provides architectural and workflow diagrams to visually explain the inner workings of ZKTradingArena.
 
 - **Workflow Diagram:** Explains the step-by-step user journey through LevelUp, Real World Simulation, and ClaimXP sections.
-- <div style="display: flex; justify-content: space-between;">
+<div style="display: flex; justify-content: space-between;">
   <img src="Photos/FlowChart.png" alt="ZK Trading Arena" style="width: 100%; height: auto;"/>
 </div>
 
