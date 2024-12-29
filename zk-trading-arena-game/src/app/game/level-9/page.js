@@ -47,6 +47,7 @@ export default function Level9() {
   ];
 
   const entryFee = ethers.utils.parseEther("0.001"); // Entry fee for Level 9
+  const [prices, setPrices] = useState(initialPrices);
 
   const applyRandomEvent = () => {
     const event = randomEvents[Math.floor(Math.random() * randomEvents.length)];
