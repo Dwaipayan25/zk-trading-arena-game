@@ -85,10 +85,14 @@ ZKTradingArena is divided into three key sections that ensure an engaging and ed
 </div>
 
 ### **LevelUp Section**
-<table style="width: 100%;">
+<table style="width: 100%; table-layout: fixed;">
   <tr>
-    <td style="width: 50%;"><img src="Photos/LevelUpLevels.png" alt="Level Up Levels" style="width: 100%; height: auto;"/></td>
-    <td style="width: 50%;"><img src="Photos/LevelUp01.png" alt="Level Up 01" style="width: 100%; height: auto;"/></td>
+    <td style="width: 50%; vertical-align: top;">
+      <img src="Photos/LevelUpLevels.png" alt="Level Up Levels" style="width: 100%; height: auto;" />
+    </td>
+    <td style="width: 50%; vertical-align: top;">
+      <img src="Photos/LevelUp01.png" alt="Level Up 01" style="width: 100%; height: auto;" />
+    </td>
   </tr>
 </table>
 
