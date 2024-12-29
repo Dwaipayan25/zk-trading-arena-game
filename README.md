@@ -1,30 +1,37 @@
 # ZK Trading Arena
 
-<div style="display: flex; ">
-  <img src="Photos/Welcome1.png" alt="ZK Trading Arena" style="width: 100%; height: auto;"/>
-</div>
-
 ### **Track:** Play
 
 **Submission for:** EDU Chain Hackathon - Semester 2
 
+<div style="display: flex; ">
+  <img src="Photos/Welcome1.png" alt="ZK Trading Arena" style="width: 100%; height: auto;"/>
+</div>
+
+
+
 ---
 
-## **Table of Contents**
-
-1. **Introduction**
-2. **Inspiration Behind ZKTradingArena**
-3. **Workflow**
-   - LevelUp Section
-   - Real World Simulation Section
-   - ClaimXP and Leaderboard Section
-4. **Diagrams**
-5. **Brief Overview of Technologies Used in ZKTradingArena**
-   - 5.1 Zero Knowledge Research and Integration using Noir
-   - 5.2 Solidity Smart Contracts and Foundry
-   - 5.3 Next.js for Frontend Development
-6. **How to Start with ZKTradingArena**
-7. **What's Next for ZKTradingArena?**
+### Table of Contents
+- [ZK Trading Arena](#zk-trading-arena)
+    - [**Track:** Play](#track-play)
+    - [Table of Content](#table-of-content)
+  - [**1. Introduction**](#1-introduction)
+  - [**2. Inspiration Behind ZKTradingArena**](#2-inspiration-behind-zktradingarena)
+  - [**3. Preview**](#3-preview)
+    - [**Rules to play the game**](#rules-to-play-the-game)
+    - [**LevelUp Section**](#levelup-section)
+    - [**Real World Simulation Section**](#real-world-simulation-section)
+    - [**ClaimXP and Leaderboard Section**](#claimxp-and-leaderboard-section)
+  - [**4. Diagrams**](#4-diagrams)
+  - [**5. Brief Overview of Technologies Used in ZKTradingArena**](#5-brief-overview-of-technologies-used-in-zktradingarena)
+    - [**5.1 Zero Knowledge Research and Integration using Noir**](#51-zero-knowledge-research-and-integration-using-noir)
+    - [**5.2 Solidity Smart Contracts and Foundry**](#52-solidity-smart-contracts-and-foundry)
+    - [**5.3 Next.js for Frontend Development**](#53-nextjs-for-frontend-development)
+  - [**6. How to Start with ZKTradingArena**](#6-how-to-start-with-zktradingarena)
+    - [**Prerequisites:**](#prerequisites)
+    - [**Steps:**](#steps)
+  - [**7. What's Next for ZKTradingArena?**](#7-whats-next-for-zktradingarena)
 
 ---
 
