@@ -41,19 +41,15 @@
 
 One of the core innovations of ZKTradingArena is its ability to combine privacy with transparency. It **is a simple simulation game of real-world commodity trading. Through zero-knowledge proof technology, players can prove the authenticity and security of transaction results without revealing their trading strategies.**
 
-<div style="border: 2px solid #ffcc00; padding: 10px; border-radius: 5px; background-color: #fffbea; color: #000;">
-  <strong>⚠️ Important:</strong><br>
-  <p>
-    In real market transactions, each trader or quantitative institution has its own trading strategy, and the quality of the strategy determines the amount of income.<br>
-    However, traders want to avoid leaks of their trading strategies because once widely known, such strategies become ineffective in a competitive market.<br>
-    To address this, ZKTradingArena allows players to prove their profitability to bystanders (such as private equity clients) without revealing critical details such as:
-  </p>
-  <ul>
-    <li><strong>Position status at each point in time.</strong></li>
-    <li><strong>Cash and asset ratio.</strong></li>
-    <li><strong>Trading frequency.</strong></li>
-  </ul>
-</div>
+> ### ⚠️ **Important**  
+> **In real market transactions, each trader or quantitative institution has its own trading strategy, and the quality of the strategy determines the amount of income.**  
+> Traders want to avoid leaks of their trading strategies because once widely known, such strategies become ineffective in a competitive market.  
+> To address this, ZKTradingArena allows players to prove their profitability to bystanders (such as private equity clients) without revealing critical details such as:  
+>  
+> - **Position status at each point in time.**  
+> - **Cash and asset ratio.**  
+> - **Trading frequency.**
+
 
 
 
