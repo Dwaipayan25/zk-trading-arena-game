@@ -142,7 +142,7 @@ export default function Level5() {
     let stars = 0;
     if (profitPercentage > 40) stars = 3;
     else if (profitPercentage >= 21) stars = 2;
-    else if (profitPercentage >= 0) stars = 1;
+    else if (profitPercentage > 0) stars = 1;
 
     setFinalStats({
       finalWorth,

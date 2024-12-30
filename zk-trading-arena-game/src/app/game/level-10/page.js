@@ -15,6 +15,7 @@ export default function Level10() {
   const [gameOver, setGameOver] = useState(false);
   const [finalStats, setFinalStats] = useState({});
   const [currentEvent, setCurrentEvent] = useState("");
+  const [showNews, setShowNews] = useState(false);
 
   const initialPrices = {
     1: { computers: 300, phones: 200, gold: 500, oil: 400, stocks: 600 },
@@ -163,7 +164,7 @@ export default function Level10() {
     let stars = 0;
     if (profitPercentage > 40) stars = 3;
     else if (profitPercentage >= 21) stars = 2;
-    else if (profitPercentage >= 0) stars = 1;
+    else if (profitPercentage > 0) stars = 1;
 
     setFinalStats({
       finalWorth,
@@ -196,7 +197,28 @@ export default function Level10() {
               <div className="flex justify-between items-center mb-6">
                 <p className="text-xl">Current Year: {year}</p>
                 {currentEvent && <p className="text-lg font-semibold">Event: {currentEvent}</p>}
+                <button
+                  onClick={() => setShowNews(true)}
+                  className="bg-blue-500 text-white px-4 py-2 rounded"
+                >
+                  View Market News
+                </button>
               </div>
+
+              {showNews && (
+                <div className="fixed inset-0 bg-black bg-opacity-50 flex justify-center items-center">
+                  <div className="bg-white p-6 rounded-lg shadow-lg max-w-md w-full">
+                    <h2 className="text-2xl font-bold mb-4">Market News</h2>
+                    <p className="mb-6">{currentEvent}</p>
+                    <button
+                      onClick={() => setShowNews(false)}
+                      className="bg-red-500 text-white px-4 py-2 rounded"
+                    >
+                      Close
+                    </button>
+                  </div>
+                </div>
+              )}
 
               <p className="mb-4 text-lg font-semibold">
                 Current Portfolio Value: ${calculatePortfolioValue().toFixed(2)}

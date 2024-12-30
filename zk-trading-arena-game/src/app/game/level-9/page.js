@@ -6,21 +6,12 @@ import ProofGenerator from "../../ProofGenerator";
 import { ethers } from "ethers";
 
 export default function Level9() {
-  const { account, zkTradeContract } = useWeb3();
-  const [hasEntered, setHasEntered] = useState(false); // Track if the player entered the game
-  const [enteringGame, setEnteringGame] = useState(false); // Entry process status
-  const [year, setYear] = useState(1);
-  const [money, setMoney] = useState(5000); // Initial amount
-  const [positions, setPositions] = useState({ computers: 0, phones: 0, gold: 0, oil: 0, stocks: 0 }); // Items
-  const [gameOver, setGameOver] = useState(false); // Track if the game is over
-  const [finalStats, setFinalStats] = useState({}); // Store final stats
-  const [currentEvent, setCurrentEvent] = useState(""); // Track the current event description
 
   const initialPrices = {
-    1: { computers: 300, phones: 200, gold: 500, oil: 400, stocks: 600 },
-    2: { computers: 320, phones: 220, gold: 550, oil: 420, stocks: 650 },
-    3: { computers: 350, phones: 250, gold: 600, oil: 450, stocks: 700 },
-    4: { computers: 380, phones: 280, gold: 650, oil: 480, stocks: 750 },
+    1: { computers: 250, phones: 150, gold: 400, oil: 300, stocks: 500 },
+    2: { computers: 300, phones: 180, gold: 450, oil: 320, stocks: 550 },
+    3: { computers: 350, phones: 200, gold: 500, oil: 350, stocks: 600 },
+    4: { computers: 400, phones: 250, gold: 550, oil: 400, stocks: 700 },
   };
 
   const finalPrices = {
@@ -32,41 +23,27 @@ export default function Level9() {
   };
 
   const news = {
-    1: "Gold demand rises as global tensions increase.",
-    2: "Tech markets surge, boosting computer and phone sales.",
-    3: "Oil prices climb steadily with rising demand.",
-    4: "Stocks rally as economies stabilize.",
+    1: "Gold and oil prices rise due to global unrest.",
+    2: "Tech markets stabilize, boosting computer and phone sales.",
+    3: "Stocks rally with increased investor confidence.",
+    4: "Gold stabilizes; oil prices continue rising steadily.",
   };
 
-  const randomEvents = [
-    { event: "Global Inflation: All prices increase by 15%", multiplier: 1.15 },
-    { event: "Market Crash: All prices decrease by 20%", multiplier: 0.8 },
-    { event: "Tech Boom: Computers and phones increase by 25%", target: ["computers", "phones"], multiplier: 1.25 },
-    { event: "Oil Crisis: Oil prices increase by 30%", target: ["oil"], multiplier: 1.3 },
-    { event: "Gold Surge: Gold prices increase by 40%", target: ["gold"], multiplier: 1.4 },
-  ];
 
-  const entryFee = ethers.utils.parseEther("0.001"); // Entry fee for Level 9
-  const [prices, setPrices] = useState(initialPrices);
+  const { account, zkTradeContract } = useWeb3();
+  const [hasEntered, setHasEntered] = useState(false); // Track if the player entered the game
+  const [enteringGame, setEnteringGame] = useState(false); // Entry process status
+  const [year, setYear] = useState(1);
+  const [money, setMoney] = useState(4000); // Initial amount
+  const [positions, setPositions] = useState({ computers: 0, phones: 0, gold: 0, oil: 0, stocks: 0 }); // Items
+  const [gameOver, setGameOver] = useState(false); // Track if the game is over
+  const [finalStats, setFinalStats] = useState({}); // Store final stats
+  const [prices, setPrices] = useState(initialPrices); // Track dynamic prices
+  const [showNews, setShowNews] = useState(false); // Toggle news popup
 
-  const applyRandomEvent = () => {
-    const event = randomEvents[Math.floor(Math.random() * randomEvents.length)];
-    setCurrentEvent(event.event);
+  
 
-    const newPrices = { ...prices[year] };
-
-    if (event.target) {
-      event.target.forEach((item) => {
-        newPrices[item] = Math.round(newPrices[item] * event.multiplier);
-      });
-    } else {
-      for (let item in newPrices) {
-        newPrices[item] = Math.round(newPrices[item] * event.multiplier);
-      }
-    }
-
-    setPrices((prev) => ({ ...prev, [year]: newPrices }));
-  };
+  const entryFee = ethers.utils.parseEther("0.001"); // Entry fee for Level 8
 
   const handleEnterGame = async () => {
     if (!zkTradeContract || !account) {
@@ -78,7 +55,7 @@ export default function Level9() {
       setEnteringGame(true);
 
       // Check if entering the game is required
-      const isEnterRequired = await zkTradeContract.checkEnterGameRequiredOrNot(9); // Game Number = 9
+      const isEnterRequired = await zkTradeContract.checkEnterGameRequiredOrNot(9); // Game Number = 8
       if (!isEnterRequired) {
         alert("You have already entered this game.");
         setHasEntered(true);
@@ -101,6 +78,13 @@ export default function Level9() {
   };
 
   const handleBuy = (item) => {
+    if (item === "stocks") {
+      setPrices((prev) => ({
+        ...prev,
+        [year]: { ...prev[year], oil: prev[year].oil + 10 },
+      }));
+    }
+
     if (money >= prices[year][item]) {
       setMoney((prev) => prev - prices[year][item]);
       setPositions((prev) => ({ ...prev, [item]: prev[item] + 1 }));
@@ -108,6 +92,17 @@ export default function Level9() {
   };
 
   const handleSell = (item) => {
+    if (item === "gold") {
+      setPrices((prev) => ({
+        ...prev,
+        [year]: {
+          ...prev[year],
+          oil: prev[year].oil - 10,
+          stocks: prev[year].stocks + 10,
+        },
+      }));
+    }
+
     if (positions[item] > 0) {
       setMoney((prev) => prev + prices[year][item]);
       setPositions((prev) => ({ ...prev, [item]: prev[item] - 1 }));
@@ -116,26 +111,29 @@ export default function Level9() {
 
   const moveToNextYear = () => {
     if (year < 4) {
-      applyRandomEvent(); // Apply random event
       setYear((prev) => prev + 1);
     }
   };
 
   const calculateProfit = () => {
-    const initialWorth = 5000; // Initial money
+    const initialWorth = 4000; // Initial money
+
+    const bonus = positions.gold >= 3 ? 500 : 0;
+
     const finalWorth =
       money +
       positions.computers * finalPrices.computers +
       positions.phones * finalPrices.phones +
       positions.gold * finalPrices.gold +
       positions.oil * finalPrices.oil +
-      positions.stocks * finalPrices.stocks;
+      positions.stocks * finalPrices.stocks +
+      bonus;
 
     const profitPercentage = ((finalWorth - initialWorth) / initialWorth) * 100;
     let stars = 0;
     if (profitPercentage > 40) stars = 3;
     else if (profitPercentage >= 21) stars = 2;
-    else if (profitPercentage >= 0) stars = 1;
+    else if (profitPercentage > 0) stars = 1;
 
     setFinalStats({
       finalWorth,
@@ -176,11 +174,31 @@ export default function Level9() {
         <div>
           {!gameOver ? (
             <>
-              <h1 className="text-3xl font-bold mb-4">Level 9: Random Global Events</h1>
+              <h1 className="text-3xl font-bold mb-4">Level 8: Multi-Year Bonuses</h1>
               <div className="flex justify-between items-center mb-6">
                 <p className="text-xl">Current Year: {year}</p>
-                {currentEvent && <p className="text-lg font-semibold">Event: {currentEvent}</p>}
+                <button
+                  onClick={() => setShowNews(true)}
+                  className="bg-blue-500 text-white px-4 py-2 rounded"
+                >
+                  View Market News
+                </button>
               </div>
+
+              {showNews && (
+                <div className="fixed inset-0 bg-black bg-opacity-50 flex justify-center items-center">
+                  <div className="bg-white p-6 rounded-lg shadow-lg max-w-md w-full">
+                    <h2 className="text-2xl font-bold mb-4">Market News</h2>
+                    <p className="mb-6">{news[year]}</p>
+                    <button
+                      onClick={() => setShowNews(false)}
+                      className="bg-red-500 text-white px-4 py-2 rounded"
+                    >
+                      Close
+                    </button>
+                  </div>
+                </div>
+              )}
 
               <p className="mb-4 text-lg font-semibold">
                 Current Portfolio Value: ${calculatePortfolioValue().toFixed(2)}
@@ -249,12 +267,12 @@ export default function Level9() {
                 Profit Percentage: {finalStats.profitPercentage.toFixed(2)}%
               </p>
               <p className="text-lg mb-4">Stars Earned: {finalStats.stars}⭐️</p>
-              
+
               <ProofGenerator
                 initialPrices={initialPrices[1]} 
                 updatedPrices={finalPrices}   
                 positions={positions}           
-                initialWorth={5000}
+                initialWorth={4000}
                 finalWorth={finalStats?.finalWorth.toFixed(0) || 0}
                 stars={finalStats?.stars - 1 || 0}    
                 gameNumber={9}

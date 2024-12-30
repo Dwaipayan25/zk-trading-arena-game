@@ -6,22 +6,12 @@ import ProofGenerator from "../../ProofGenerator";
 import { ethers } from "ethers";
 
 export default function Level8() {
-  const { account, zkTradeContract } = useWeb3();
-  const [hasEntered, setHasEntered] = useState(false); // Track if the player entered the game
-  const [enteringGame, setEnteringGame] = useState(false); // Entry process status
-  const [year, setYear] = useState(1);
-  const [money, setMoney] = useState(4000); // Initial amount
-  const [positions, setPositions] = useState({ computers: 0, phones: 0, gold: 0, oil: 0, stocks: 0 }); // Items
-  const [gameOver, setGameOver] = useState(false); // Track if the game is over
-  const [finalStats, setFinalStats] = useState({}); // Store final stats
-
   const initialPrices = {
     1: { computers: 250, phones: 150, gold: 400, oil: 300, stocks: 500 },
     2: { computers: 300, phones: 180, gold: 450, oil: 320, stocks: 550 },
     3: { computers: 350, phones: 200, gold: 500, oil: 350, stocks: 600 },
     4: { computers: 400, phones: 250, gold: 550, oil: 400, stocks: 700 },
   };
-
   const finalPrices = {
     computers: 450,
     phones: 300,
@@ -36,6 +26,23 @@ export default function Level8() {
     3: "Stocks rally with increased investor confidence.",
     4: "Gold stabilizes; oil prices continue rising steadily.",
   };
+  
+  const { account, zkTradeContract } = useWeb3();
+  const [hasEntered, setHasEntered] = useState(false); // Track if the player entered the game
+  const [enteringGame, setEnteringGame] = useState(false); // Entry process status
+  const [year, setYear] = useState(1);
+  const [money, setMoney] = useState(4000); // Initial amount
+  const [positions, setPositions] = useState({ computers: 0, phones: 0, gold: 0, oil: 0, stocks: 0 }); // Items
+  const [gameOver, setGameOver] = useState(false); // Track if the game is over
+  const [finalStats, setFinalStats] = useState({}); // Store final stats
+  
+  const [showNews, setShowNews] = useState(false); // Toggle news popup
+
+  
+
+  const [prices, setPrices] = useState(initialPrices); // Track dynamic prices
+
+  
 
   const entryFee = ethers.utils.parseEther("0.001"); // Entry fee for Level 8
 
@@ -72,7 +79,6 @@ export default function Level8() {
   };
 
   const handleBuy = (item) => {
-    // Dependency: Buying stocks increases oil price
     if (item === "stocks") {
       setPrices((prev) => ({
         ...prev,
@@ -80,14 +86,13 @@ export default function Level8() {
       }));
     }
 
-    if (money >= initialPrices[year][item]) {
-      setMoney((prev) => prev - initialPrices[year][item]);
+    if (money >= prices[year][item]) {
+      setMoney((prev) => prev - prices[year][item]);
       setPositions((prev) => ({ ...prev, [item]: prev[item] + 1 }));
     }
   };
 
   const handleSell = (item) => {
-    // Dependency: Selling gold decreases oil price but increases stock price
     if (item === "gold") {
       setPrices((prev) => ({
         ...prev,
@@ -100,7 +105,7 @@ export default function Level8() {
     }
 
     if (positions[item] > 0) {
-      setMoney((prev) => prev + initialPrices[year][item]);
+      setMoney((prev) => prev + prices[year][item]);
       setPositions((prev) => ({ ...prev, [item]: prev[item] - 1 }));
     }
   };
@@ -114,7 +119,6 @@ export default function Level8() {
   const calculateProfit = () => {
     const initialWorth = 4000; // Initial money
 
-    // Multi-year bonus: Hold at least 3 gold for all 4 years
     const bonus = positions.gold >= 3 ? 500 : 0;
 
     const finalWorth =
@@ -130,7 +134,7 @@ export default function Level8() {
     let stars = 0;
     if (profitPercentage > 40) stars = 3;
     else if (profitPercentage >= 21) stars = 2;
-    else if (profitPercentage >= 0) stars = 1;
+    else if (profitPercentage > 0) stars = 1;
 
     setFinalStats({
       finalWorth,
@@ -143,11 +147,11 @@ export default function Level8() {
   const calculatePortfolioValue = () => {
     return (
       money +
-      positions.computers * initialPrices[year].computers +
-      positions.phones * initialPrices[year].phones +
-      positions.gold * initialPrices[year].gold +
-      positions.oil * initialPrices[year].oil +
-      positions.stocks * initialPrices[year].stocks
+      positions.computers * prices[year].computers +
+      positions.phones * prices[year].phones +
+      positions.gold * prices[year].gold +
+      positions.oil * prices[year].oil +
+      positions.stocks * prices[year].stocks
     );
   };
 
@@ -174,7 +178,28 @@ export default function Level8() {
               <h1 className="text-3xl font-bold mb-4">Level 8: Multi-Year Bonuses</h1>
               <div className="flex justify-between items-center mb-6">
                 <p className="text-xl">Current Year: {year}</p>
+                <button
+                  onClick={() => setShowNews(true)}
+                  className="bg-blue-500 text-white px-4 py-2 rounded"
+                >
+                  View Market News
+                </button>
               </div>
+
+              {showNews && (
+                <div className="fixed inset-0 bg-black bg-opacity-50 flex justify-center items-center">
+                  <div className="bg-white p-6 rounded-lg shadow-lg max-w-md w-full">
+                    <h2 className="text-2xl font-bold mb-4">Market News</h2>
+                    <p className="mb-6">{news[year]}</p>
+                    <button
+                      onClick={() => setShowNews(false)}
+                      className="bg-red-500 text-white px-4 py-2 rounded"
+                    >
+                      Close
+                    </button>
+                  </div>
+                </div>
+              )}
 
               <p className="mb-4 text-lg font-semibold">
                 Current Portfolio Value: ${calculatePortfolioValue().toFixed(2)}
@@ -190,16 +215,16 @@ export default function Level8() {
                   </tr>
                 </thead>
                 <tbody>
-                  {Object.keys(initialPrices[year]).map((item) => (
+                  {Object.keys(prices[year]).map((item) => (
                     <tr key={item}>
                       <td className="border px-4 py-2 capitalize">{item}</td>
-                      <td className="border px-4 py-2">${initialPrices[year][item]}</td>
+                      <td className="border px-4 py-2">${prices[year][item]}</td>
                       <td className="border px-4 py-2">{positions[item]}</td>
                       <td className="border px-4 py-2">
                         <button
                           onClick={() => handleBuy(item)}
                           className="bg-green-500 text-white px-2 py-1 rounded mr-2"
-                          disabled={money < initialPrices[year][item]}
+                          disabled={money < prices[year][item]}
                         >
                           Buy
                         </button>
@@ -243,7 +268,7 @@ export default function Level8() {
                 Profit Percentage: {finalStats.profitPercentage.toFixed(2)}%
               </p>
               <p className="text-lg mb-4">Stars Earned: {finalStats.stars}⭐️</p>
-            
+
               <ProofGenerator
                 initialPrices={initialPrices[1]} 
                 updatedPrices={finalPrices}   
