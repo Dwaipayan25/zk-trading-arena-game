@@ -91,7 +91,7 @@ export default function Level5() {
   const calculateEndOfYearTax = () => {
     const portfolioValue = calculatePortfolioValue();
     const tax = portfolioValue * 0.05; // 5% tax
-    setMoney((prev) => prev - tax);
+    setMoney((prev) => Math.max(prev - tax, 0));
   };
 
   const handleBuy = (item) => {
