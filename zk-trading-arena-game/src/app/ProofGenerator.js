@@ -144,7 +144,7 @@ const ProofGenerator = ({ initialPrices, updatedPrices, positions, initialWorth,
         positions={positions}
       />
       <button
-        onClick={demo}
+        onClick={generateAndSaveProof}
         className="bg-yellow-500 text-white px-4 py-2 rounded mt-6"
         disabled={loading || onChainLoading}
       >
