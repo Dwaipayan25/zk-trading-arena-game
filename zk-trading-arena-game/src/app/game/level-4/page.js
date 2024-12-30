@@ -76,7 +76,7 @@ export default function Level4() {
         penalty += (quantity - 3) * 10; // $10 per extra item
       }
     });
-    setMoney((prev) => prev - penalty);
+    setMoney((prev) => Math.max(prev - penalty, 0));
   };
 
   const handleBuy = (item) => {
