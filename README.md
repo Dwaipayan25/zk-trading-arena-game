@@ -4,6 +4,10 @@
 
 **Submission for:** EDU Chain Hackathon - Semester 2
 
+**Access The Game:** [zk-trading-arena-game.vercel.app](https://zk-trading-arena-game.vercel.app)
+
+**Watch the Presentation and Demo Video:**  [ZK Trading Arena Game Presentation for EDU Chain Sem2 Hackathon](https://youtu.be/IDDmCapPKdk?si=ITlq6BzJLmlP8FEJ)
+
 <div style="display: flex; ">
   <img src="Photos/Welcome1.png" alt="ZK Trading Arena" style="width: 100%; height: auto;"/>
 </div>
