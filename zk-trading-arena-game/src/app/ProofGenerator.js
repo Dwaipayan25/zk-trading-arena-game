@@ -5,6 +5,9 @@ import axios from 'axios';
 import { ethers } from 'ethers';
 import { useWeb3 } from './Web3Context';
 
+const SINDRI_API_KEY = process.env.NEXT_PUBLIC_SINDRI_API_KEY;
+
+
 // Component to display positions and percentage changes
 const PositionSummary = ({ initialPrices, updatedPrices, positions }) => {
   const calculateChange = (initial, updated) => (((updated - initial) / initial) * 100).toFixed(2);
@@ -41,6 +44,11 @@ const ProofGenerator = ({ initialPrices, updatedPrices, positions, initialWorth,
   const [loading, setLoading] = useState(false);
   const [onChainLoading, setOnChainLoading] = useState(false);
   const { account, zkTradeContract } = useWeb3();
+
+
+  const demo=()=>{
+    console.log(SINDRI_API_KEY)
+  }
 
   const generateAndSaveProof = async () => {
     if (!zkTradeContract) {
@@ -80,7 +88,7 @@ const ProofGenerator = ({ initialPrices, updatedPrices, positions, initialWorth,
           headers: {
             'Content-Type': 'application/json',
             Accept: 'application/json',
-            Authorization: 'Bearer sindri_TAgwZ3w2BVc10fzFFpFZnqiWFHlgRKJi_0Gu4',
+            Authorization: `Bearer ${SINDRI_API_KEY}`,
           },
         }
       );
@@ -98,7 +106,7 @@ const ProofGenerator = ({ initialPrices, updatedPrices, positions, initialWorth,
         {
           headers: {
             Accept: 'application/json',
-            Authorization: 'Bearer sindri_TAgwZ3w2BVc10fzFFpFZnqiWFHlgRKJi_0Gu4',
+            Authorization: `Bearer ${SINDRI_API_KEY}`,
           },
         }
       );
